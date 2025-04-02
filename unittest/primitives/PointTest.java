@@ -16,9 +16,9 @@ class PointTest {
      */
     @Test
     void testSubtract() {
-        /** A point for tests to (1,2,3) */
+        /** A point for tests at (1,2,3) */
         final Point P1 = new Point(1, 2, 3);
-        /** A point for tests to (0,3,-2) */
+        /** A point for tests at (0,3,-2) */
         final Point P2 = new Point(0, 3, -2);
 
         // ============ Equivalence Partitions Tests ==============
@@ -32,7 +32,7 @@ class PointTest {
      */
     @Test
     void testAdd() {
-        /** A point for tests to (1,2,3) */
+        /** A point for tests at (1,2,3) */
         final Point P1 = new Point(1, 2, 3);
         /** A vector for tests to (0,3,-2) */
         final Vector V1 = new Vector(0, 3, -2);
@@ -48,9 +48,9 @@ class PointTest {
      */
     @Test
     void testDistanceSquared() {
-        /** A point for tests to (1,2,3) */
+        /** A point for tests at (1,2,3) */
         final Point P1 = new Point(1, 2, 3);
-        /** A point for tests to (0,3,-2) */
+        /** A point for tests at (0,3,-2) */
         final Point P2 = new Point(0, 3, -2);
 
         // ============ Equivalence Partitions Tests ==============
@@ -64,9 +64,9 @@ class PointTest {
      */
     @Test
     void testDistance() {
-        /** A point for tests to (1,2,3) */
+        /** A point for tests at (1,2,3) */
         final Point P1 = new Point(1, 2, 3);
-        /** A point for tests to (1,-2,0) */
+        /** A point for tests at (1,-2,0) */
         final Point P2 = new Point(1, -2, 0);
 
         // ============ Equivalence Partitions Tests ==============
