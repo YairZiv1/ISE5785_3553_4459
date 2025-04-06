@@ -16,14 +16,9 @@ class PointTest {
      */
     @Test
     void testSubtract() {
-        /** A point for tests at (1,2,3) */
-        final Point P1 = new Point(1, 2, 3);
-        /** A point for tests at (0,3,-2) */
-        final Point P2 = new Point(0, 3, -2);
-
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that subtracts 2 points and compares it to the expected result.
-        assertEquals(new Point(1,-1,5), P1.subtract(P2),
+        assertEquals(new Point(1,-1,5), new Point(1, 2, 3).subtract(new Point(0, 3, -2)),
                 "ERROR: Point - Point does not work correctly");
     }
 
@@ -32,14 +27,9 @@ class PointTest {
      */
     @Test
     void testAdd() {
-        /** A point for tests at (1,2,3) */
-        final Point P1 = new Point(1, 2, 3);
-        /** A vector for tests to (0,3,-2) */
-        final Vector V1 = new Vector(0, 3, -2);
-
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that adds 2 points and compares it to the expected result.
-        assertEquals(new Point(1,5,1), P1.add(V1),
+        assertEquals(new Point(1,5,1), new Point(1, 2, 3).add(new Vector(0, 3, -2)),
                 "ERROR: Point + Vector does not work correctly");
     }
 
@@ -48,14 +38,9 @@ class PointTest {
      */
     @Test
     void testDistanceSquared() {
-        /** A point for tests at (1,2,3) */
-        final Point P1 = new Point(1, 2, 3);
-        /** A point for tests at (0,3,-2) */
-        final Point P2 = new Point(0, 3, -2);
-
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that calculates the distance squared between 2 points and compares it to the expected result.
-        assertEquals(27, P1.distanceSquared(P2), DELTA,
+        assertEquals(27, new Point(1, 2, 3).distanceSquared(new Point(0, 3, -2)), DELTA,
                 "ERROR: distance-squared between two Points does not work correctly");
     }
 
@@ -64,14 +49,9 @@ class PointTest {
      */
     @Test
     void testDistance() {
-        /** A point for tests at (1,2,3) */
-        final Point P1 = new Point(1, 2, 3);
-        /** A point for tests at (1,-2,0) */
-        final Point P2 = new Point(1, -2, 0);
-
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that calculates the distance between 2 points and compares it to the expected result.
-        assertEquals(5, P1.distance(P2), DELTA,
+        assertEquals(5, new Point(1, 2, 3).distance(new Point(1, -2, 0)), DELTA,
                 "ERROR: distance between two Points does not work correctly");
     }
 }
