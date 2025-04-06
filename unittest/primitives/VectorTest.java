@@ -84,7 +84,7 @@ class VectorTest {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that do a dot-product between 2 vectors with an acute angle
         // and compares it to the expected result.
-        assertEquals(20, V1.dotProduct(new Vector(2, 2, 2)),
+        assertEquals(12, V1.dotProduct(new Vector(2, 2, 2)),
                 "ERROR: Vector * Vector does not work correctly for acute angle");
 
         // TC02: Test that do a dot-product between 2 vectors with an obtuse angle
