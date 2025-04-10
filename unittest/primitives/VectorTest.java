@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing Vector
- * @author Yair Ziv and Amitay Yosh'i.
+ * @author Yair Ziv and Amitay Yosh'i
  */
 class VectorTest {
     /**

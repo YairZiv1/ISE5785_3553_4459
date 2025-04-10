@@ -39,7 +39,7 @@ public class Tube extends RadialGeometry {
         /**
          * In the case where the scalar is 0 -
          * it turns out that we will be doing a vector product with the scalar 0, and the can't a vector 0.
-         * So we ensure that it won't happen.
+         * So we ensure that it won't happen
          */
         if (Util.isZero(SCALAR))
             return p.subtract(ray.getPoint(0)).normalize();
