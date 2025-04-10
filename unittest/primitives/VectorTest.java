@@ -5,12 +5,41 @@ import org.junit.jupiter.api.Test;
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testing Vector
+ * @author Yair Ziv and Amitay Yosh'i.
+ */
 class VectorTest {
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
      * assertEquals
      */
     private static final double DELTA = 0.000001;
+
+    /**
+     * Test method for {@link Vector#Vector(double, double, double)}.
+     */
+    @Test
+    void testConstructor() {
+        // ============ Equivalence Partitions Tests ==============
+
+        // TC01: Check for a vector represented by 3 doubles.
+        assertDoesNotThrow(() -> new Vector(1, 2, 3), "ERROR: Vector constructor does not work correctly");
+
+        // TC02: Check for a vector represented by Double3.
+        assertDoesNotThrow(() -> new Vector(new Double3(1, 2, 3)),
+                "ERROR: Vector constructor does not work correctly");
+
+        // =============== Boundary Values Tests ==================
+
+        // TC10: If the given coordinates represent the zero vector (3 doubles).
+        assertThrows(IllegalArgumentException.class, () -> new Vector(0, 0, 0),
+                "ERROR: Vector can not be the zero vector");
+
+        // TC11: If the given coordinates represent the zero vector. (Double3)
+        assertThrows(IllegalArgumentException.class, () -> new Vector(Double3.ZERO),
+                "ERROR: Vector can not be the zero vector");
+    }
 
     /**
      * Test method for {@link Vector#subtract(Point)}.
@@ -85,12 +114,12 @@ class VectorTest {
         // TC01: Test that do a dot-product between 2 vectors with an acute angle
         // and compares it to the expected result.
         assertEquals(12, V1.dotProduct(new Vector(2, 2, 2)),
-                "ERROR: Vector * Vector does not work correctly for acute angle");
+                "ERROR: Vector * Vector does not work correctly for angle 0 < a < 90");
 
         // TC02: Test that do a dot-product between 2 vectors with an obtuse angle
         // and compares it to the expected result.
         assertEquals(-3, V1.dotProduct(new Vector(-4, -1, 1)),
-                "ERROR: Vector * Vector does not work correctly for obtuse angle");
+                "ERROR: Vector * Vector does not work correctly for angle 90 < a < 180");
 
         // =============== Boundary Values Tests ==================
         // TC11: Test that do a dot-product between 2 parallel vectors and compares it to the expected result.
@@ -148,7 +177,13 @@ class VectorTest {
     void testLengthSquared() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that calculates the length squared of a vector and compares it to the expected result.
-        assertEquals(14, new Vector(1, -2, 3).lengthSquared(), DELTA,
+        // (without negative)
+        assertEquals(14, new Vector(1, 2, 3).lengthSquared(), DELTA,
+                "ERROR: Vector length squared does not work correctly");
+
+        // TC02: Test that calculates the length squared of a vector and compares it to the expected result.
+        // (with negative)
+        assertEquals(14, new Vector(-1, -2, 3).lengthSquared(), DELTA,
                 "ERROR: Vector length squared does not work correctly");
     }
 
@@ -159,7 +194,13 @@ class VectorTest {
     void testLength() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that calculates the length of a vector and compares it to the expected result.
-        assertEquals(5, new Vector(0, -3, 4).length(), DELTA,
+        // (without negative)
+        assertEquals(5, new Vector(0, 3, 4).length(), DELTA,
+                "ERROR: Vector length does not work correctly");
+
+        // TC02: Test that calculates the length of a vector and compares it to the expected result.
+        // (with negative)
+        assertEquals(5, new Vector(0, -3, -4).length(), DELTA,
                 "ERROR: Vector length does not work correctly");
     }
 

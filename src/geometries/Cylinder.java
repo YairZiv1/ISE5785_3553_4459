@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Util;
 import primitives.Vector;
 
 /**
@@ -28,6 +29,25 @@ public class Cylinder extends Tube {
 
     @Override
     public Vector getNormal(Point p) {
-        return null;
+        // A variable that contains the Point of the Ray.
+        final Point P0 = ray.getPoint(0);
+        // A variable that contains the Vector of the Ray.
+        final Vector V0 = ray.getVector();
+
+        // In case the given Point is the same as the Ray's Point
+        if (p.equals(P0))
+            return V0.scale(-1);
+
+        final double SCALAR = V0.dotProduct(p.subtract(P0));
+
+        // In case the given Point is on the lower base.
+        if (Util.isZero(SCALAR))
+            return V0.scale(-1);
+        // In case the given Point is on the upper base.
+        else if (SCALAR == height)
+            return V0;
+        // In case the Point is on the side - use super.
+        else
+            return super.getNormal(p);
     }
 }

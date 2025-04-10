@@ -7,6 +7,10 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testing Cylinder
+ * @author Yair Ziv and Amitay Yosh'i.
+ */
 class CylinderTest {
 
     /**
@@ -29,7 +33,7 @@ class CylinderTest {
 
         // ensure there are no exceptions
         assertDoesNotThrow(() -> CYLINDER.getNormal(P01), "");
-        assertEquals(new Vector(-0.8,0,-0.6), CYLINDER.getNormal(P01),
+        assertEquals(new Vector(0.8,0,0.6), CYLINDER.getNormal(P01),
                 "ERROR: The calculation of the normal isn't as excepted");
 
         // TC02: Test that compares the cylinder's normal to the expected result when the point is on the lower base.
@@ -69,7 +73,7 @@ class CylinderTest {
         assertEquals(EXCEPTED_UPPER_NORMAL, CYLINDER.getNormal(P12),
                 "ERROR: The calculation of the normal isn't as excepted");
 
-        // =============== Boundary Values Tests ==================
+
         // TC13: Checks the cylinder's normal when the point is between the lower base and the envelope.
         /** A point for tests at (5,2,6) */
         final Point P13 = new Point(5,2,6);
