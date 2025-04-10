@@ -17,7 +17,7 @@ import primitives.*;
 class PolygonTests {
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
-     * assertEquals
+     * assertEquals.
      */
     private static final double DELTA = 0.000001;
 

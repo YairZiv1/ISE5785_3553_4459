@@ -30,6 +30,25 @@ public class Ray {
         this.v = v.normalize();
     }
 
+    /**
+     * Get function for the point that represents the ray.
+     * @return p the starting point of the ray or p scaled.
+     */
+    public Point getPoint(double d) {
+        if (Util.isZero(d))
+            return p;
+        else
+            return p.add(v.scale(d));
+    }
+
+    /**
+     * Get function for the vector that represents the ray.
+     * @return the direction vector of the ray.
+     */
+    public Vector getVector() {
+        return v;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

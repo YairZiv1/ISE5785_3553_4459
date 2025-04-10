@@ -6,6 +6,10 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testing Sphere
+ * @author Yair Ziv and Amitay Yosh'i.
+ */
 class SphereTest {
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in

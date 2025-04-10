@@ -3,7 +3,7 @@ package geometries;
 import primitives.Point;
 
 /**
- * The Triangle class represents a two-dimensional triangle of Euclidean geometry in Cartesian
+ * The Triangle class represents a two-dimensional triangle of Euclidean geometry in  Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i.
  */

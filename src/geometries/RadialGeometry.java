@@ -16,7 +16,7 @@ public abstract class RadialGeometry extends Geometry {
     /**
      * Constructs a new RadialGeometry object with the specified radius.
      * @param radius the radius of the radial geometry; must be a positive value
-     * @throws IllegalArgumentException if the given radius is negative
+     * @throws IllegalArgumentException if the given radius is negative.
      */
     public RadialGeometry(double radius) {
         if (radius <= 0)

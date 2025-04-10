@@ -27,7 +27,7 @@ public class Polygon extends Geometry {
     private final int size;
 
     /**
-     * Polygon constructor based on vertices list. The list must be ordered by edge
+     * Polygon constructor based on vertices list. The list must be ordered by edge.
      * path. The polygon must be convex.
      *
      * @param vertices list of vertices according to their order by

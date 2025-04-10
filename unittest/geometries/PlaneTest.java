@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import primitives.*;
 
+/**
+ * Testing Plane
+ * @author Yair Ziv and Amitay Yosh'i.
+ */
 class PlaneTest {
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
@@ -31,6 +35,9 @@ class PlaneTest {
         final Plane PLANE = new Plane(P1, P2, P3);
         /** A vector for the plane's normal */
         final Vector NORMAL = PLANE.getNormal(P1);
+
+        // ensure there are no exceptions
+        assertDoesNotThrow(() -> PLANE.getNormal(P1), "");
 
         assertEquals(0, P1.subtract(P2).dotProduct(NORMAL), DELTA,
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");

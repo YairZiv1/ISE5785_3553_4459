@@ -6,6 +6,10 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testing Triangle
+ * @author Yair Ziv and Amitay Yosh'i.
+ */
 class TriangleTest {
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in

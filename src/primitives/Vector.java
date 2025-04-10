@@ -1,7 +1,7 @@
 package primitives;
 
 /**
- * Class Vector is the basic class representing a Vector of Euclidean geometry in Cartesian
+ * Class Vector is the basic class representing a Vector of Euclidean  geometry in Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i.
  */

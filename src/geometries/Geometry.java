@@ -13,7 +13,7 @@ public abstract class Geometry {
     /**
      * Calculates the normal vector to the geometric object at the given point.
      * @param p the point on the surface of the geometric object where the normal is to be calculated
-     * @return the normal vector to the geometric object at the given point
+     * @return the normal vector to the geometric object at the given point.
      */
     public abstract Vector getNormal(Point p);
 }
