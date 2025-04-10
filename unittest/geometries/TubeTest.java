@@ -7,6 +7,10 @@ import primitives.Ray;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testing Tube
+ * @author Yair Ziv and Amitay Yosh'i
+ */
 class TubeTest {
 
     /**

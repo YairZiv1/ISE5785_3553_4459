@@ -6,7 +6,7 @@ import primitives.Vector;
 /**
  * Class Geometry is the basic abstract class representing a general geometric shape
  * of Euclidean geometry in Cartesian
- * 3-Dimensional coordinate system.
+ * 3-Dimensional coordinate system
  * @author Yair Ziv and Amitay Yosh'i
  */
 public abstract class Geometry {

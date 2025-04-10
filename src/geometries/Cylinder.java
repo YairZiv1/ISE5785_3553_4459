@@ -31,7 +31,7 @@ public class Cylinder extends Tube {
     public Vector getNormal(Point p) {
         // A variable that contains the Point of the Ray.
         final Point P0 = ray.getPoint(0);
-        // A variable that contains the Vector of the Ray.
+        // A variable that contains the Vector of the Ray
         final Vector V0 = ray.getVector();
 
         // In case the given Point is the same as the Ray's Point

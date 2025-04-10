@@ -26,7 +26,7 @@ public class Plane extends Geometry {
      * and calculates the normal
      * @param p1 the first point on the plane.
      * @param p2 the second point on the plane.
-     * @param p3 the third point on the plane.
+     * @param p3 the third point on the plane
      */
     public Plane(Point p1, Point p2, Point p3) {
         this.p = p1;

@@ -12,7 +12,7 @@ import primitives.*;
 
 /**
  * Testing Polygons
- * @author Dan
+ * @author Dan.
  */
 class PolygonTests {
     /**

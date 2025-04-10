@@ -3,7 +3,7 @@ package primitives;
 /**
  * Class Ray is the basic class representing a ray of Euclidean geometry in Cartesian
  * 3-Dimensional coordinate system.
- * @author Yair Ziv and Amitay Yosh'i.
+ * @author Yair Ziv and Amitay Yosh'i
  */
 public class Ray {
     /**
@@ -32,6 +32,7 @@ public class Ray {
 
     /**
      * Get function for the point that represents the ray.
+     * @param d for getting a point on the Ray (not just the head point)
      * @return p the starting point of the ray or p scaled.
      */
     public Point getPoint(double d) {

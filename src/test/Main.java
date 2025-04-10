@@ -8,7 +8,7 @@ import primitives.*;
 
 /**
  * Test program for the 1st stage
- * @author Dan Zilberstein.
+ * @author Dan Zilberstein
  */
 public final class Main {
     /** A point for tests at (1,2,3) */

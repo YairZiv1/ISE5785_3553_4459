@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing Vector
- * @author Yair Ziv and Amitay Yosh'i.
+ * @author Yair Ziv and Amitay Yosh'i
  */
 class VectorTest {
     /**
@@ -103,7 +103,7 @@ class VectorTest {
     }
 
     /**
-     * Test method for {@link Vector#dotProduct{Vector})}.
+     * Test method for {@link Vector#dotProduct(Vector)}.
      */
     @Test
     void testDotProduct() {

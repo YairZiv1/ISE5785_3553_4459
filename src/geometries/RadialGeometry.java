@@ -9,7 +9,7 @@ package geometries;
 public abstract class RadialGeometry extends Geometry {
     /**
      * Represents the radius of a radial geometry object.
-     * This field is immutable and must be provided during object construction.
+     * This field is immutable and must be provided during object construction
      */
     protected final double radius;
 
