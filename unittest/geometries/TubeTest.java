@@ -44,4 +44,11 @@ class TubeTest {
         assertEquals(EXCEPTED_NORMAL, TUBE.getNormal(P2),
                 "ERROR: The calculation of the normal isn't as excepted");
     }
+
+    /**
+     * Test method for {@link Tube#findIntersections(Ray)}.
+     */
+    @Test
+    void testFindIntersections() {
+    }
 }

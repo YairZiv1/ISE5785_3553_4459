@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import primitives.*;
 
+import java.util.List;
+
 /**
  * Testing Plane
  * @author Yair Ziv and Amitay Yosh'i
@@ -90,5 +92,77 @@ class PlaneTest {
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");
         assertEquals(1, NORMAL.length(), DELTA,
                 "ERROR: The normal isn't normalized");
+    }
+
+    /**
+     * Test method for {@link Plane#findIntersections(Ray)}.
+     */
+    @Test
+    void testFindIntersections() {
+        /** The reference point of plane at (0,0,1) */
+        final Point p001 = new Point(0,0,1);
+        /** A plane for test */
+        final Plane plane = new Plane(p001, new Point(-1,0,0), new Point(-1,1,0));
+
+        /** A point used in some test cases at (1,1,2) */
+        final Point p112 = new Point(1,1,2);
+        /** A point used in some test cases at (1,1,3) */
+        final Point p113 = new Point(1,1,3);
+
+        /** A vector used in some test cases to (0,0,1) */
+        final Vector v001 = new Vector(0,0,1);
+        /** A vector used in some test cases to (1,0,1) */
+        final Vector v101 = new Vector(1,0,1);
+        /** A vector used in some test cases to (-1,0,1) */
+        final Vector vm101 = new Vector(-1,0,1);
+
+        /** The expected result in some test cases */
+        final var exp = List.of(p112);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray intersects the plane (1 points)
+        final var result01 = plane.findIntersections(new Ray(new Point(1,1,1), v001));
+        assertNotNull(result01, "Can't be empty list");
+        assertEquals(1, result01.size(), "Wrong number of points");
+        assertEquals(exp, result01, "Ray intersects plane");
+
+        // TC02: Ray does not intersect the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(p113, v001)),
+                "Ray does not intersect plane");
+
+        // =============== Boundary Values Tests ==================
+        // **** Group 1: Ray is parallel to the plane (all tests 0 points)
+        // TC11: Ray is included in the plane
+        assertNull(plane.findIntersections(new Ray(p112, v101)),
+                "Ray parallel to plane and included in it");
+
+        // TC12: Ray is not included in the plane
+        assertNull(plane.findIntersections(new Ray(p113, v101)),
+                "Ray parallel to plane and not included in it");
+
+        // **** Group 2: Ray is orthogonal to the plane
+        // TC21: Ray starts before the plane (1 points)
+        final var result21 = plane.findIntersections(new Ray(new Point(2,1,1), vm101));
+        assertNotNull(result21, "Can't be empty list");
+        assertEquals(1, result21.size(), "Wrong number of points");
+        assertEquals(exp, result21, "Ray orthogonal to plane and starts before it");
+
+        // TC22: Ray starts in the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(p112, vm101)),
+                "Ray orthogonal to plane and starts in it");
+
+        // TC23: Ray starts after the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(p113, vm101)),
+                "Ray orthogonal to plane and starts after it");
+
+        // **** Group 3: Ray begins at the plane
+        // TC31: Ray is neither orthogonal nor parallel to the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(p112, v001)),
+                "Ray begins at plane");
+
+        // **** Group 4: Ray begins at the same point which appears as reference point in the plane
+        // TC41: Ray is neither orthogonal nor parallel to the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(p001, v001)),
+                "Ray begins at reference point of plane");
     }
 }

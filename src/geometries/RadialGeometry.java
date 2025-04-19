@@ -6,7 +6,7 @@ package geometries;
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i
  */
-public abstract class RadialGeometry extends Geometry {
+public abstract class RadialGeometry implements Geometry {
     /**
      * Represents the radius of a radial geometry object.
      * This field is immutable and must be provided during object construction

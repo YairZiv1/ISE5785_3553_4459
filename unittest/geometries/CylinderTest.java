@@ -92,4 +92,11 @@ class CylinderTest {
         assertEquals(EXCEPTED_UPPER_NORMAL, CYLINDER.getNormal(P14),
                 "ERROR: The calculation of the normal isn't as excepted");
     }
+
+    /**
+     * Test method for {@link Cylinder#findIntersections(Ray)}.
+     */
+    @Test
+    void testFindIntersections() {
+    }
 }

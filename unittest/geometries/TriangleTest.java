@@ -2,7 +2,10 @@ package geometries;
 
 import org.junit.jupiter.api.Test;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,5 +47,46 @@ class TriangleTest {
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");
         assertEquals(1, NORMAL.length(), DELTA,
                 "ERROR: The normal isn't normalized");
+    }
+
+    /**
+     * Test method for {@link Triangle#findIntersections(Ray)}.
+     */
+    @Test
+    void testFindIntersections() {
+        /** A triangle for test */
+        final Triangle triangle = new Triangle(
+                new Point(0,0,1), new Point(-1,0,0), new Point(-1,1,0));
+
+        /** A vector used in some test cases to (0,0,1) */
+        final Vector v001 = new Vector(0,0,1);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray is inside the triangle (1 points)
+        final var result01 = triangle.findIntersections(new Ray(new Point(-0.7,0.5,0), v001));
+        assertNotNull(result01, "Can't be empty list");
+        assertEquals(1, result01.size(), "Wrong number of points");
+        assertEquals(List.of(new Point(-0.7,0.5,0.3)), result01, "Ray inside triangle");
+
+        // TC02: Ray is outside the triangle against edge (0 points)
+        assertNull(triangle.findIntersections(new Ray(new Point(-2,0.5,-2), v001)),
+                "Ray outside triangle against edge");
+
+        // TC03: Ray is outside the triangle against vertex (0 points)
+        assertNull(triangle.findIntersections(new Ray(new Point(-2,3,-2), v001)),
+                "Ray outside triangle against vertex");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: Ray is on the edge
+        assertNull(triangle.findIntersections(new Ray(new Point(-0.5,0.5,0), v001)),
+                "Ray on edge");
+
+        // TC12: Ray is on the vertex
+        assertNull(triangle.findIntersections(new Ray(new Point(0,0,0.5), v001)),
+                "Ray on vertex");
+
+        // TC13: Ray is on the edge's continuation
+        assertNull(triangle.findIntersections(new Ray(new Point(-2,2,-2), v001)),
+                "Ray on edge's continuation");
     }
 }

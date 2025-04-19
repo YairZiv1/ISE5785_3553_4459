@@ -5,6 +5,8 @@ import primitives.Ray;
 import primitives.Util;
 import primitives.Vector;
 
+import java.util.List;
+
 /**
  * The Cylinder class represents a 3D cylinder object of Euclidean geometry in Cartesian
  * 3-Dimensional coordinate system.
@@ -49,5 +51,10 @@ public class Cylinder extends Tube {
         // In case the Point is on the side - use super.
         else
             return super.getNormal(p);
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }

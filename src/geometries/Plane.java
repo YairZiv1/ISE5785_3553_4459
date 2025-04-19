@@ -1,14 +1,20 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
+
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * The Plane class represents a 2D plane of Euclidean geometry in Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i.
  */
-public class Plane extends Geometry {
+public class Plane implements Geometry {
     /**
      * A point on the geometric plane used to define the plane's position
      * in 3D Cartesian space.
@@ -48,5 +54,29 @@ public class Plane extends Geometry {
     @Override
     public Vector getNormal(Point p) {
         return this.v;
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        // Point that represents the ray's head
+        final Point P0 = ray.getPoint(0);
+
+        // in case the ray's head is the reference point in the plane, there are no intersections
+        if(P0.equals(this.p))
+            return null;
+
+        // numerator for the formula
+        final double num = this.v.dotProduct(this.p.subtract(P0));
+        // denominator for the formula
+        final double den = this.v.dotProduct(ray.getVector());
+        // in case ray is parallel to the plane
+        if (isZero(den))
+            return null;
+
+        final double t = alignZero(num / den);
+        // if (0 ≥ t) there are no intersections
+        if (t > 0)
+            return List.of(ray.getPoint(t));
+        return null;
     }
 }

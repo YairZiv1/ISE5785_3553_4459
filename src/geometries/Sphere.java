@@ -1,7 +1,12 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
+import java.util.List;
 
 /**
  * The Sphere class represents a 3D geometrical body of Euclidean geometry in Cartesian
@@ -27,5 +32,41 @@ public class Sphere extends RadialGeometry {
     @Override
     public Vector getNormal(Point p) {
         return p.subtract(center).normalize();
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        // Point that represents the ray's head
+        final Point P0 = ray.getPoint(0);
+
+        // in case the ray's head is the sphere's center, we calculate the one intersection directly
+        if(P0.equals(this.center))
+            return List.of(ray.getPoint(this.radius));
+
+        final Vector u = this.center.subtract(P0);
+        final double tm = ray.getVector().dotProduct(u);
+        final double d = Math.sqrt(u.lengthSquared() - tm * tm);
+        // if (d ≥ r) there are no intersections
+        if( alignZero(d - this.radius) > 0)
+            return null;
+
+        final double th = Math.sqrt(this.radius * this.radius - d * d);
+        // in case the ray is tangent to the sphere, there are no intersections
+        if(isZero(th))
+            return null;
+        final double t1 = alignZero(tm - th);
+        final double t2 = alignZero(tm + th);
+        // 2 intersections
+        if(t1 > 0 && t2 > 0)
+            return List.of(ray.getPoint(t1), ray.getPoint(t2));
+        // 1 intersection
+        else if(t1 > 0)
+            return List.of(ray.getPoint(t1));
+        // 1 intersection
+        else if(t2 > 0)
+            return List.of(ray.getPoint(t2));
+        // 0 intersections
+        else
+            return null;
     }
 }

@@ -32,14 +32,14 @@ public class Ray {
 
     /**
      * Get function for the point that represents the ray.
-     * @param d for getting a point on the Ray (not just the head point)
+     * @param t for getting a point on the Ray (not just the head point)
      * @return p the starting point of the ray or p scaled.
      */
-    public Point getPoint(double d) {
-        if (Util.isZero(d))
+    public Point getPoint(double t) {
+        if (Util.isZero(t))
             return p;
         else
-            return p.add(v.scale(d));
+            return p.add(v.scale(t));
     }
 
     /**

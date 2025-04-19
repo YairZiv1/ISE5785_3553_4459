@@ -1,6 +1,12 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
+import java.util.List;
 
 /**
  * The Triangle class represents a two-dimensional triangle of Euclidean geometry in  Cartesian
@@ -16,5 +22,43 @@ public class Triangle extends Polygon {
      */
     public Triangle(Point p1, Point p2, Point p3) {
         super(p1, p2, p3);
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        // test the intersections with triangle’s plane
+        final var intersections = this.plane.findIntersections(ray);
+        if (intersections == null)
+            return null;
+
+        // Point that represents the ray's head
+        final Point P0 = ray.getPoint(0);
+        // Vector that represents the ray's axis
+        final Vector v = ray.getVector();
+
+        // v1, v2, v3 can't be the ZERO Vector because it happens only if P0 = P1/P2/P3,
+        // which means the ray begins at the plane and there are no intersections with the plane at all,
+        // so we would have exit this method already because of the first condition
+        final Vector v1 = this.vertices.get(0).subtract(P0);
+        final Vector v2 = this.vertices.get(1).subtract(P0);
+        final Vector v3 = this.vertices.get(2).subtract(P0);
+
+        // n1, n2, n3 can't be the ZERO Vector because it happens only if v1 and v2 or v2 and v3 or v3 and v1
+        // are on the same line, which means P0 is on one of the triangle's edges,
+        // which means the ray begins at the plane and there are no intersections with the plane at all,
+        // so we would have exit this method already because of the first condition
+        final Vector n1 = v1.crossProduct(v2).normalize();
+        final Vector n2 = v2.crossProduct(v3).normalize();
+        final Vector n3 = v3.crossProduct(v1).normalize();
+
+        final double s1 = alignZero(v.dotProduct(n1));
+        final double s2 = alignZero(v.dotProduct(n2));
+        final double s3 = alignZero(v.dotProduct(n3));
+
+        // the point is inside the triangle only if s1, s2 and s3 have the same sign and none of them is 0
+        if ((s1>0 && s2>0 && s3>0) || (s1<0 && s2<0 && s3<0))
+            return intersections;
+
+        return null;
     }
 }
