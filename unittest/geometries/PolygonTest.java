@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import primitives.*;
 
+import java.util.List;
+
 /**
  * Testing Polygons
  * @author Dan.
@@ -90,5 +92,39 @@ class PolygonTest {
      */
     @Test
     void testFindIntersections() {
+        /** A polygon for test */
+        final Polygon polygon = new Polygon(
+                new Point(0,0,1), new Point(-1,0,0), new Point(-1,1,0));
+
+        /** A vector used in some test cases to (0,0,1) */
+        final Vector v001 = new Vector(0,0,1);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray is inside the polygon (1 points)
+        final var result01 = polygon.findIntersections(new Ray(new Point(-0.7,0.5,0), v001));
+        assertNotNull(result01, "Can't be empty list");
+        assertEquals(1, result01.size(), "Wrong number of points");
+        assertEquals(List.of(new Point(-0.7,0.5,0.3)), result01, "Ray inside polygon");
+
+        // TC02: Ray is outside the polygon against edge (0 points)
+        assertNull(polygon.findIntersections(new Ray(new Point(-2,0.5,-2), v001)),
+                "Ray outside polygon against edge");
+
+        // TC03: Ray is outside the polygon against vertex (0 points)
+        assertNull(polygon.findIntersections(new Ray(new Point(-2,3,-2), v001)),
+                "Ray outside polygon against vertex");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: Ray is on the edge
+        assertNull(polygon.findIntersections(new Ray(new Point(-0.5,0.5,0), v001)),
+                "Ray on edge");
+
+        // TC12: Ray is on the vertex
+        assertNull(polygon.findIntersections(new Ray(new Point(0,0,0.5), v001)),
+                "Ray on vertex");
+
+        // TC13: Ray is on the edge's continuation
+        assertNull(polygon.findIntersections(new Ray(new Point(-2,2,-2), v001)),
+                "Ray on edge's continuation");
     }
 }

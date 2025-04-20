@@ -12,6 +12,9 @@ import java.util.List;
  * @author Yair Ziv and Amitay Yosh'i
  */
 public class Geometries implements Intersectable{
+    /**
+     * List of the geometries shapes
+     */
     private final List<Intersectable> geometries = new LinkedList<Intersectable>();
 
     /**
