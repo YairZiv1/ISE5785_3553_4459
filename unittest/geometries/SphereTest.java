@@ -28,7 +28,7 @@ class SphereTest {
         final Point P = new Point(-3, -2, 3);
 
         // ============ Equivalence Partitions Tests ==============
-        // TC01: Test that compares the triangle's normal to the expected result.
+        // TC01: Test that compares the sphere's normal to the expected result.
         /** A sphere for test */
         final Sphere SPHERE = new Sphere(4, new Point(1, -2, 3));
 
