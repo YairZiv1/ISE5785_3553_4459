@@ -37,20 +37,20 @@ public class Sphere extends RadialGeometry {
     @Override
     public List<Point> findIntersections(Ray ray) {
         // Point that represents the ray's head
-        final Point P0 = ray.getPoint(0);
+        final Point rayPoint = ray.getPoint(0);
 
         // in case the ray's head is the sphere's center, we calculate the one intersection directly
-        if(P0.equals(this.center))
-            return List.of(ray.getPoint(this.radius));
+        if(rayPoint.equals(center))
+            return List.of(ray.getPoint(radius));
 
-        final Vector u = this.center.subtract(P0);
+        final Vector u = center.subtract(rayPoint);
         final double tm = ray.getVector().dotProduct(u);
         final double d = Math.sqrt(u.lengthSquared() - tm * tm);
         // if (d ≥ r) there are no intersections
-        if( alignZero(d - this.radius) > 0)
+        if( alignZero(d - radius) > 0)
             return null;
 
-        final double th = Math.sqrt(this.radius * this.radius - d * d);
+        final double th = Math.sqrt(radius * radius - d * d);
         // in case the ray is tangent to the sphere, there are no intersections
         if(isZero(th))
             return null;

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *  The Geometries class represents collection of geometries shapes
- * @author Yair Ziv and Amitay Yosh'i
+ * @author Yair Ziv and Amitay Yosh'i.
  */
 public class Geometries implements Intersectable{
     /**

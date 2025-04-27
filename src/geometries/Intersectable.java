@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * The Intersectable interface represents shapes that can be intersected by ray
- * @author Yair Ziv and Amitay Yosh'i
+ * @author Yair Ziv and Amitay Yosh'i.
  */
 public interface Intersectable {
     /**

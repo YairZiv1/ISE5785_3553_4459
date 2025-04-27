@@ -6,7 +6,7 @@ import primitives.*;
  * Class Geometry is the basic interface representing a general geometric shape
  * of Euclidean geometry in Cartesian
  * 3-Dimensional coordinate system
- * @author Yair Ziv and Amitay Yosh'i
+ * @author Yair Ziv and Amitay Yosh'i.
  */
 public interface Geometry extends Intersectable {
     /**

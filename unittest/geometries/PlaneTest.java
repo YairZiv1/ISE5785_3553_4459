@@ -24,46 +24,46 @@ class PlaneTest {
      */
     @Test
     void testConstructor() {
-        /** A point for tests at (1,2,3) */
-        final Point P1 = new Point(1, 2, 3);
-        /** A point for tests at (0,3,-2) */
-        final Point P2 = new Point(0, 3, -2);
-        /** A point for tests at (5, 6, 3) */
-        final Point P3 = new Point(5, 6, 3);
+        // A point for tests at (1,2,3) 
+        final Point p123 = new Point(1, 2, 3);
+        // A point for tests at (0,3,-2) 
+        final Point p03m2 = new Point(0, 3, -2);
+        // A point for tests at (5, 6, 3) 
+        final Point p563 = new Point(5, 6, 3);
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that compares the plane's normal to the expected result.
-        /** A plane for test */
-        final Plane PLANE = new Plane(P1, P2, P3);
-        /** A vector for the plane's normal */
-        final Vector NORMAL = PLANE.getNormal(P1);
+        // A plane for test
+        final Plane PLANE = new Plane(p123, p03m2, p563);
+        // A vector for the plane's normal
+        final Vector NORMAL = PLANE.getNormal(p123);
 
         // ensure there are no exceptions
-        assertDoesNotThrow(() -> PLANE.getNormal(P1), "");
+        assertDoesNotThrow(() -> PLANE.getNormal(p123), "");
 
-        assertEquals(0, P1.subtract(P2).dotProduct(NORMAL), DELTA,
+        assertEquals(0, p123.subtract(p03m2).dotProduct(NORMAL), DELTA,
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");
-        assertEquals(0, P1.subtract(P3).dotProduct(NORMAL), DELTA,
+        assertEquals(0, p123.subtract(p563).dotProduct(NORMAL), DELTA,
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");
         assertEquals(1, NORMAL.length(), DELTA,
                 "ERROR: The normal isn't normalized");
 
         // =============== Boundary Values Tests ==================
         // TC11: Test that checks if the first point of the plane equals to its second point.
-        assertThrows(IllegalArgumentException.class, () -> new Plane(P1, P1, P3),
+        assertThrows(IllegalArgumentException.class, () -> new Plane(p123, p123, p563),
                 "ERROR: Constructor does not throw an exception if first and second points are equal");
         // TC12: Test that checks if the first point of the plane equals to its third point.
-        assertThrows(IllegalArgumentException.class, () -> new Plane(P1, P2, P1),
+        assertThrows(IllegalArgumentException.class, () -> new Plane(p123, p03m2, p123),
                 "ERROR: Constructor does not throw an exception if first and third points are equal");
         // TC13: Test that checks if the second point of the plane equals to its third point.
-        assertThrows(IllegalArgumentException.class, () -> new Plane(P1, P2, P2),
+        assertThrows(IllegalArgumentException.class, () -> new Plane(p123, p03m2, p03m2),
                 "ERROR: Constructor does not throw an exception if second and third points are equal");
         // TC14: Test that checks if all three points of the plane are equal.
-        assertThrows(IllegalArgumentException.class, () -> new Plane(P1, P1, P1),
+        assertThrows(IllegalArgumentException.class, () -> new Plane(p123, p123, p123),
                 "ERROR: Constructor does not throw an exception if all three points are equal");
         // TC15: Test that checks if all three points of the plane are on the same line.
         assertThrows(IllegalArgumentException.class,
-                () -> new Plane(P1, new Point(2, 4, 6), new Point(-1, -2, -3)),
+                () -> new Plane(p123, new Point(2, 4, 6), new Point(-1, -2, -3)),
                 "ERROR: Constructor does not throw an exception if all three points are on the same line");
     }
 
@@ -72,23 +72,23 @@ class PlaneTest {
      */
     @Test
     void testGetNormal() {
-        /** A point for tests at (1,2,3) */
-        final Point P1 = new Point(1, 2, 3);
-        /** A point for tests at (0,3,-2) */
-        final Point P2 = new Point(0, 3, -2);
-        /** A point for tests at (5, 6, 3) */
-        final Point P3 = new Point(5, 6, 3);
+        // A point for tests at (1,2,3)
+        final Point p123 = new Point(1, 2, 3);
+        // A point for tests at (0,3,-2)
+        final Point p03m2 = new Point(0, 3, -2);
+        // A point for tests at (5, 6, 3)
+        final Point p563 = new Point(5, 6, 3);
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that compares the plane's normal to the expected result.
-        /** A plane for test */
-        final Plane PLANE = new Plane(P1, P2, P3);
-        /** A vector for the plane's normal */
-        final Vector NORMAL = PLANE.getNormal(P1);
+        // A plane for test
+        final Plane PLANE = new Plane(p123, p03m2, p563);
+        // A vector for the plane's normal
+        final Vector NORMAL = PLANE.getNormal(p123);
 
-        assertEquals(0, P1.subtract(P2).dotProduct(NORMAL), DELTA,
+        assertEquals(0, p123.subtract(p03m2).dotProduct(NORMAL), DELTA,
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");
-        assertEquals(0, P1.subtract(P3).dotProduct(NORMAL), DELTA,
+        assertEquals(0, p123.subtract(p563).dotProduct(NORMAL), DELTA,
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");
         assertEquals(1, NORMAL.length(), DELTA,
                 "ERROR: The normal isn't normalized");
@@ -99,24 +99,24 @@ class PlaneTest {
      */
     @Test
     void testFindIntersections() {
-        /** The reference point of plane at (0,0,1) */
+        // The reference point of plane at (0,0,1)
         final Point p001 = new Point(0,0,1);
-        /** A plane for test */
+        // A plane for test
         final Plane plane = new Plane(p001, new Point(-1,0,0), new Point(-1,1,0));
 
-        /** A point used in some test cases at (1,1,2) */
+        // A point used in some test cases at (1,1,2)
         final Point p112 = new Point(1,1,2);
-        /** A point used in some test cases at (1,1,3) */
+        // A point used in some test cases at (1,1,3)
         final Point p113 = new Point(1,1,3);
 
-        /** A vector used in some test cases to (0,0,1) */
+        // A vector used in some test cases to (0,0,1)
         final Vector v001 = new Vector(0,0,1);
-        /** A vector used in some test cases to (1,0,1) */
+        // A vector used in some test cases to (1,0,1)
         final Vector v101 = new Vector(1,0,1);
-        /** A vector used in some test cases to (-1,0,1) */
+        // A vector used in some test cases to (-1,0,1)
         final Vector vm101 = new Vector(-1,0,1);
 
-        /** The expected result in some test cases */
+        // The expected result in some test cases
         final var exp = List.of(p112);
 
         // ============ Equivalence Partitions Tests ==============

@@ -27,7 +27,7 @@ public class Triangle extends Polygon {
     @Override
     public List<Point> findIntersections(Ray ray) {
         // test the intersections with triangle’s plane
-        final var intersections = this.plane.findIntersections(ray);
+        final var intersections = plane.findIntersections(ray);
         if (intersections == null)
             return null;
 
@@ -39,9 +39,9 @@ public class Triangle extends Polygon {
         // v1, v2, v3 can't be the ZERO Vector because it happens only if P0 = P1/P2/P3,
         // which means the ray begins at the plane and there are no intersections with the plane at all,
         // so we would have exit this method already because of the first condition
-        final Vector v1 = this.vertices.get(0).subtract(P0);
-        final Vector v2 = this.vertices.get(1).subtract(P0);
-        final Vector v3 = this.vertices.get(2).subtract(P0);
+        final Vector v1 = vertices.get(0).subtract(P0);
+        final Vector v2 = vertices.get(1).subtract(P0);
+        final Vector v3 = vertices.get(2).subtract(P0);
 
         // n1, n2, n3 can't be the ZERO Vector because it happens only if v1 and v2 or v2 and v3 or v3 and v1
         // are on the same line, which means P0 is on one of the triangle's edges,

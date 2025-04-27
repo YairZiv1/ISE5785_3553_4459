@@ -20,7 +20,7 @@ public class Polygon implements Geometry {
      */
     protected final List<Point> vertices;
     /**
-     * Associated plane in which the polygon lays
+     * Associated plane in which the polygon lays.
      */
     protected final Plane plane;
     /**

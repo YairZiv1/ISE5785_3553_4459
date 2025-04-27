@@ -92,15 +92,15 @@ class PolygonTest {
      */
     @Test
     void testFindIntersections() {
-        /** A polygon for test */
+        // A polygon for test
         final Polygon polygon = new Polygon(
                 new Point(0,0,1), new Point(-1,0,0), new Point(-1,1,0));
 
-        /** A vector used in some test cases to (0,0,1) */
+        // A vector used in some test cases to (0,0,1)
         final Vector v001 = new Vector(0,0,1);
 
         // ============ Equivalence Partitions Tests ==============
-        // TC01: Ray is inside the polygon (1 points)
+        // TC01: Ray is inside the polygon (1 point)
         final var result01 = polygon.findIntersections(new Ray(new Point(-0.7,0.5,0), v001));
         assertNotNull(result01, "Can't be empty list");
         assertEquals(1, result01.size(), "Wrong number of points");

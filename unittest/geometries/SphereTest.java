@@ -14,27 +14,21 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SphereTest {
     /**
-     * Delta value for accuracy when comparing the numbers of type 'double' in
-     * assertEquals
-     */
-    private static final double DELTA = 0.000001;
-
-    /**
      * Test method for {@link Sphere#getNormal(Point)}.
      */
     @Test
     void testGetNormal() {
-        /** A point for tests at (-3,-2,3) */
-        final Point P = new Point(-3, -2, 3);
+        // A point for tests at (-3,-2,3)
+        final Point point = new Point(-3, -2, 3);
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that compares the triangle's normal to the expected result.
-        /** A sphere for test */
-        final Sphere SPHERE = new Sphere(4, new Point(1, -2, 3));
+        // A sphere for test
+        final Sphere sphere = new Sphere(4, new Point(1, -2, 3));
 
         // ensure there are no exceptions
-        assertDoesNotThrow(() -> SPHERE.getNormal(P), "");
-        assertEquals(new Vector(-1, 0, 0), SPHERE.getNormal(P),
+        assertDoesNotThrow(() -> sphere.getNormal(point), "");
+        assertEquals(new Vector(-1, 0, 0), sphere.getNormal(point),
                 "ERROR: The calculation of the normal isn't as excepted");
     }
 
@@ -43,30 +37,30 @@ class SphereTest {
      */
     @Test
     void testFindIntersections() {
-        /** The center point of sphere at (1,0,0) */
+        // The center point of sphere at (1,0,0)
         final Point  p100 = new Point(1, 0, 0);
-        /** A sphere for test */
+        // A sphere for test
         final Sphere sphere = new Sphere(1d, p100);
 
-        /** A point used in some test cases */
+        // A point used in some test cases
         final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
-        /** A point used in some test cases */
+        // A point used in some test cases
         final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
-        /** A point used in some test cases */
+        // A point used in some test cases
         final Point gp3 = new Point(0.051316701949486, -0.316227766016838, 0);
-        /** A point used in some test cases */
+        // A point used in some test cases
         final Point gp4 = new Point(1.948683298050514, 0.316227766016838, 0);
-        /** A point used in some test cases at (-1,0,0) */
+        // A point used in some test cases at (-1,0,0)
         final Point pm100 = new Point(-1, 0, 0);
 
-        /** A vector used in some test cases to (0,0,1) */
+        // A vector used in some test cases to (0,0,1)
         final Vector v001 = new Vector(0, 0, 1);
-        /** A vector used in some test cases to (3,1,0) */
+        // A vector used in some test cases to (3,1,0)
         final Vector v310 = new Vector(3, 1, 0);
 
-        /** The expected result in some test cases */
+        // The expected result in some test cases
         final var exp_gp2 = List.of(gp2);
-        /** The expected result in some test cases */
+        // The expected result in some test cases
         final var exp_gp4 = List.of(gp4);
 
         // ============ Equivalence Partitions Tests ==============
@@ -92,7 +86,7 @@ class SphereTest {
 
         // =============== Boundary Values Tests ==================
         // **** Group 1: Ray's line crosses the sphere (but not the center)
-        // TC11: Ray starts at sphere and goes inside (1 points)
+        // TC11: Ray starts at sphere and goes inside (1 point)
         final var result11 = sphere.findIntersections(new Ray(gp1, v310));
         assertNotNull(result11, "Can't be empty list");
         assertEquals(1, result11.size(), "Wrong number of points");
@@ -115,13 +109,13 @@ class SphereTest {
         assertEquals(1, result22.size(), "Wrong number of points");
         assertEquals(exp_gp4, result22, "Ray at sphere and goes inside through center");
 
-        // TC23: Ray starts inside (1 points)
+        // TC23: Ray starts inside (1 point)
         final var result23 = sphere.findIntersections(new Ray(new Point(1.3, 0.1, 0), v310));
         assertNotNull(result23, "Can't be empty list");
         assertEquals(1, result23.size(), "Wrong number of points");
         assertEquals(exp_gp4, result23, "Ray inside sphere and goes through center");
 
-        // TC24: Ray starts at the center (1 points)
+        // TC24: Ray starts at the center (1 point)
         final var result24 = sphere.findIntersections(new Ray(p100, v310));
         assertNotNull(result24, "Can't be empty list");
         assertEquals(1, result24.size(), "Wrong number of points");

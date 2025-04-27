@@ -32,22 +32,22 @@ public class Cylinder extends Tube {
     @Override
     public Vector getNormal(Point p) {
         // A variable that contains the Point of the Ray.
-        final Point P0 = ray.getPoint(0);
+        final Point rayPoint = ray.getPoint(0);
         // A variable that contains the Vector of the Ray
-        final Vector V0 = ray.getVector();
+        final Vector rayVector = ray.getVector();
 
         // In case the given Point is the same as the Ray's Point
-        if (p.equals(P0))
-            return V0.scale(-1);
+        if (p.equals(rayPoint))
+            return rayVector.scale(-1);
 
-        final double SCALAR = V0.dotProduct(p.subtract(P0));
+        final double t = rayVector.dotProduct(p.subtract(rayPoint));
 
         // In case the given Point is on the lower base.
-        if (Util.isZero(SCALAR))
-            return V0.scale(-1);
+        if (Util.isZero(t))
+            return rayVector.scale(-1);
         // In case the given Point is on the upper base.
-        else if (SCALAR == height)
-            return V0;
+        else if (t == height)
+            return rayVector;
         // In case the Point is on the side - use super.
         else
             return super.getNormal(p);

@@ -14,17 +14,18 @@ import static primitives.Util.isZero;
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i.
  */
+
 public class Plane implements Geometry {
     /**
      * A point on the geometric plane used to define the plane's position
      * in 3D Cartesian space.
      */
-    private final Point p;
+    private final Point head;
 
     /**
      * The (normalized) vector represents the direction of the plane.
      */
-    private final Vector v;
+    private final Vector normal;
 
     /**
      * Constructs a Plane object using three points in 3D space.
@@ -35,8 +36,10 @@ public class Plane implements Geometry {
      * @param p3 the third point on the plane
      */
     public Plane(Point p1, Point p2, Point p3) {
-        this.p = p1;
-        this.v = p2.subtract(p1).crossProduct(p3.subtract(p1)).normalize();
+        this.head = p1;
+        Vector v1 = p2.subtract(p1);
+        Vector v2 = p3.subtract(p1);
+        this.normal = v1.crossProduct(v2).normalize();
     }
 
     /**
@@ -47,33 +50,35 @@ public class Plane implements Geometry {
      * @param v a Vector object representing the normal to the plane.
      */
     public Plane(Point p, Vector v) {
-        this.p = p;
-        this.v = v.normalize();
+        this.head = p;
+        this.normal = v.normalize();
     }
 
     @Override
     public Vector getNormal(Point p) {
-        return this.v;
+        return normal;
     }
 
     @Override
     public List<Point> findIntersections(Ray ray) {
         // Point that represents the ray's head
-        final Point P0 = ray.getPoint(0);
+        final Point rayPoint = ray.getPoint(0);
+        // Vector that represents the ray's axis
+        final Vector rayVector = ray.getVector();
 
         // in case the ray's head is the reference point in the plane, there are no intersections
-        if(P0.equals(this.p))
+        if(rayPoint.equals(head))
             return null;
 
         // numerator for the formula
-        final double num = this.v.dotProduct(this.p.subtract(P0));
+        final double numerator = normal.dotProduct(head.subtract(rayPoint));
         // denominator for the formula
-        final double den = this.v.dotProduct(ray.getVector());
+        final double denominator = normal.dotProduct(rayVector);
         // in case ray is parallel to the plane
-        if (isZero(den))
+        if (isZero(denominator))
             return null;
 
-        final double t = alignZero(num / den);
+        final double t = alignZero(numerator / denominator);
         // if (0 ≥ t) there are no intersections
         if (t > 0)
             return List.of(ray.getPoint(t));

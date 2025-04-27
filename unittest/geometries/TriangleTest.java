@@ -25,27 +25,27 @@ class TriangleTest {
      */
     @Test
     void testGetNormal() {
-        /** A point for tests at (1,2,3) */
-        final Point P1 = new Point(1, 2, 3);
-        /** A point for tests at (0,3,-2) */
-        final Point P2 = new Point(0, 3, -2);
-        /** A point for tests at (5, 6, 3) */
-        final Point P3 = new Point(5, 6, 3);
+        // A point for tests at (1,2,3)
+        final Point p123 = new Point(1, 2, 3);
+        // A point for tests at (0,3,-2)
+        final Point p03m2 = new Point(0, 3, -2);
+        // A point for tests at (5, 6, 3)
+        final Point p563 = new Point(5, 6, 3);
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that compares the triangle's normal to the expected result.
-        /** A triangle for test */
-        final Triangle TRIANGLE = new Triangle(P1, P2, P3);
-        /** A vector for the triangle's normal */
-        final Vector NORMAL = TRIANGLE.getNormal(P1);
+        // A triangle for test
+        final Triangle triangle = new Triangle(p123, p03m2, p563);
+        // A vector for the triangle's normal
+        final Vector normal = triangle.getNormal(p123);
 
         // ensure there are no exceptions
-        assertDoesNotThrow(() -> TRIANGLE.getNormal(P1), "");
-        assertEquals(0, P1.subtract(P2).dotProduct(NORMAL), DELTA,
+        assertDoesNotThrow(() -> triangle.getNormal(p123), "");
+        assertEquals(0, p123.subtract(p03m2).dotProduct(normal), DELTA,
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");
-        assertEquals(0, P1.subtract(P3).dotProduct(NORMAL), DELTA,
+        assertEquals(0, p123.subtract(p563).dotProduct(normal), DELTA,
                 "ERROR: The normal isn't orthogonal to one of the plane's vectors");
-        assertEquals(1, NORMAL.length(), DELTA,
+        assertEquals(1, normal.length(), DELTA,
                 "ERROR: The normal isn't normalized");
     }
 
@@ -54,15 +54,15 @@ class TriangleTest {
      */
     @Test
     void testFindIntersections() {
-        /** A triangle for test */
+        // A triangle for test
         final Triangle triangle = new Triangle(
                 new Point(0,0,1), new Point(-1,0,0), new Point(-1,1,0));
 
-        /** A vector used in some test cases to (0,0,1) */
+        // A vector used in some test cases to (0,0,1)
         final Vector v001 = new Vector(0,0,1);
 
         // ============ Equivalence Partitions Tests ==============
-        // TC01: Ray is inside the triangle (1 points)
+        // TC01: Ray is inside the triangle (1 point)
         final var result01 = triangle.findIntersections(new Ray(new Point(-0.7,0.5,0), v001));
         assertNotNull(result01, "Can't be empty list");
         assertEquals(1, result01.size(), "Wrong number of points");
