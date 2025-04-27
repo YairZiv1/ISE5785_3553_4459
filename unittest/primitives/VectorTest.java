@@ -51,7 +51,7 @@ class VectorTest {
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that subtracts 2 vectors and compares it to the expected result.
-        assertEquals(new Vector(1,-1,5), V1.subtract(new Vector(0, 3, -2)),
+        assertEquals(new Vector(1,-1,5), V1.subtract(new Point(0, 3, -2)),
                 "ERROR: Vector - Vector does not work correctly");
 
         // =============== Boundary Values Tests ==================

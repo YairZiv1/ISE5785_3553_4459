@@ -22,7 +22,7 @@ class PointTest {
     void testSubtract() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that subtracts 2 points and compares it to the expected result.
-        assertEquals(new Point(1,-1,5), new Point(1, 2, 3).subtract(new Point(0, 3, -2)),
+        assertEquals(new Vector(1,-1,5), new Point(1, 2, 3).subtract(new Point(0, 3, -2)),
                 "ERROR: Point - Point does not work correctly");
 
         // =============== Boundary Values Tests ==================
