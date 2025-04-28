@@ -32,28 +32,29 @@ public class Triangle extends Polygon {
             return null;
 
         // Point that represents the ray's head
-        final Point P0 = ray.getPoint(0);
+        final Point rayPoint = ray.getPoint(0);
         // Vector that represents the ray's axis
-        final Vector v = ray.getVector();
+        final Vector rayVector = ray.getVector();
 
-        // v1, v2, v3 can't be the ZERO Vector because it happens only if P0 = P1/P2/P3,
+        // vector1, vector2, vector3 can't be the ZERO Vector because it happens only if rayPoint = P1/P2/P3,
         // which means the ray begins at the plane and there are no intersections with the plane at all,
         // so we would have exit this method already because of the first condition
-        final Vector v1 = vertices.get(0).subtract(P0);
-        final Vector v2 = vertices.get(1).subtract(P0);
-        final Vector v3 = vertices.get(2).subtract(P0);
+        final Vector vector1 = vertices.get(0).subtract(rayPoint);
+        final Vector vector2 = vertices.get(1).subtract(rayPoint);
+        final Vector vector3 = vertices.get(2).subtract(rayPoint);
 
-        // n1, n2, n3 can't be the ZERO Vector because it happens only if v1 and v2 or v2 and v3 or v3 and v1
-        // are on the same line, which means P0 is on one of the triangle's edges,
+        // normal1, normal2, normal3 can't be the ZERO Vector because it happens only if:
+        // vector1 and vector2 or vector2 and vector3 or vector3 and vector1
+        // are on the same line, which means rayPoint is on one of the triangle's edges,
         // which means the ray begins at the plane and there are no intersections with the plane at all,
         // so we would have exit this method already because of the first condition
-        final Vector n1 = v1.crossProduct(v2).normalize();
-        final Vector n2 = v2.crossProduct(v3).normalize();
-        final Vector n3 = v3.crossProduct(v1).normalize();
+        final Vector normal1 = vector1.crossProduct(vector2).normalize();
+        final Vector normal2 = vector2.crossProduct(vector3).normalize();
+        final Vector normal3 = vector3.crossProduct(vector1).normalize();
 
-        final double s1 = alignZero(v.dotProduct(n1));
-        final double s2 = alignZero(v.dotProduct(n2));
-        final double s3 = alignZero(v.dotProduct(n3));
+        final double s1 = alignZero(rayVector.dotProduct(normal1));
+        final double s2 = alignZero(rayVector.dotProduct(normal2));
+        final double s3 = alignZero(rayVector.dotProduct(normal3));
 
         // the point is inside the triangle only if s1, s2 and s3 have the same sign and none of them is 0
         if ((s1>0 && s2>0 && s3>0) || (s1<0 && s2<0 && s3<0))

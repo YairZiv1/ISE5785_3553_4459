@@ -95,42 +95,52 @@ public class Polygon implements Geometry {
 
     @Override
     public List<Point> findIntersections(Ray ray) {
-        // test the intersections with triangle’s plane
-        final var intersections = this.plane.findIntersections(ray);
+        // test the intersections with polygon's plane
+        final var intersections = plane.findIntersections(ray);
         if (intersections == null)
             return null;
 
         // Point that represents the ray's head
-        final Point P0 = ray.getPoint(0);
+        final Point rayPoint = ray.getPoint(0);
         // Vector that represents the ray's axis
-        final Vector v = ray.getVector();
+        final Vector rayVector = ray.getVector();
         // number that represents the size of vertices
         final int size_vertices = vertices.size();
 
         // Array of the v vectors in the formula
-        List<Vector> vectorsV = new ArrayList<Vector>();
+        List<Vector> vectorsV = new ArrayList<>();
         // Array of the dot-product of the n vectors with the vector of ray in the formula
         double[] s = new double[size_vertices];
 
-        // These vectors can't be the ZERO Vector because it happens only if P0 is one of the vertices,
+        // These vectors can't be the ZERO Vector because it happens only if rayPoint is one of the vertices,
         // which means the ray begins at the plane and there are no intersections with the plane at all,
         // so we would have exit this method already because of the first condition
-        for (int i=0; i < size_vertices; ++i)
-            vectorsV.add(this.vertices.get(i).subtract(P0));
+        for (Point vertex : vertices)
+            vectorsV.add(vertex.subtract(rayPoint));
 
         // These vectors can't be the ZERO Vector because it happens only if two of vectorsV
-        // are on the same line, which means P0 is on one of the triangle's edges,
+        // are on the same line, which means rayPoint is on one of the triangle's edges,
         // which means the ray begins at the plane and there are no intersections with the plane at all,
         // so we would have exit this method already because of the first condition
+        Vector vector1;
+        Vector vector2;
+        Vector normal;
         for (int i=0; i < size_vertices; ++i) {
-            if (i == size_vertices-1)
-                s[i] = alignZero(v.dotProduct((vectorsV.getLast().crossProduct(vectorsV.getFirst()))));
-            else
-                s[i] = alignZero(v.dotProduct((vectorsV.get(i).crossProduct(vectorsV.get(i + 1)))));
+            if (i == size_vertices - 1) {
+                vector1 = vectorsV.getFirst();
+                vector2 = vectorsV.getLast();
+            }
+            else {
+                vector1 = vectorsV.get(i + 1);
+                vector2 = vectorsV.get(i);
+            }
+
+            normal = vector1.crossProduct(vector2);
+            s[i] = alignZero(rayVector.dotProduct(normal));
+
             if (i != 0 && s[i] * s[i-1] <= 0)
                 return null;
         }
-
         return intersections;
     }
 }
