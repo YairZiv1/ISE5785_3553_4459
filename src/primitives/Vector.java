@@ -6,8 +6,11 @@ package primitives;
  * @author Yair Ziv and Amitay Yosh'i
  */
 public class Vector extends Point {
+    /** The X axis */
     public static final Vector AXIS_X = new Vector(1,0,0);
+    /** The Y axis */
     public static final Vector AXIS_Y = new Vector(0,1,0);
+    /** The Z axis */
     public static final Vector AXIS_Z = new Vector(0,0,1);
 
 

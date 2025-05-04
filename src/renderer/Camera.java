@@ -4,6 +4,8 @@ import primitives.*;
 
 import java.util.MissingResourceException;
 
+import static primitives.Util.isZero;
+
 /**
  * Camera class represents a camera in 3D space.
  * @author Yair Ziv and Amitay Yosh'i.
@@ -54,19 +56,41 @@ public class Camera implements Cloneable {
     }
 
     /**
-     *
-     * @param nX
-     * @param nY
-     * @param j
-     * @param i
-     * @return
+     * Calculates the ray from camera through a specific pixel with a given resolution
+     * @param nX the number of columns of pixels.
+     * @param nY the number of rows of pixels.
+     * @param j the pixel's column number
+     * @param i the pixel's row number.
+     * @return the ray from camera to the middle of the pixel
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-        return null;
+        // Calculate the center point of the view plane
+        Point pC = this.p0.add(vTo.scale(distance));
+
+        // Calculate the size of each pixel (height and width)
+        double rY = this.height / nY;
+        double rX = this.width / nX;
+
+        // Calculate the vertical and horizontal offset from the center to pixel (i, j)
+        // Minus because y starts at the top of the matrix and continues opposite the vUp vector
+        double yI = -(i - (nY - 1) / 2d) * rY;
+        double xJ = (j - (nX - 1) / 2d) * rX;
+
+        // Start at the center of the view plane
+        Point pIJ = pC;
+        // If xJ is zero than no need to move on the horizontal axis
+        if (!isZero(xJ))
+            pIJ = pIJ.add(this.vRight.scale(xJ));
+        // If yI is zero than no need to move on the vertical axis
+        if (!isZero(yI))
+            pIJ = pIJ.add(this.vUp.scale(yI));
+
+        // Return the ray that starts at camera and goes through the center of the pixel
+        return new Ray(this.p0, pIJ.subtract(this.p0));
     }
 
     /**
-     *
+     * Class for building the camera
      */
     public static class Builder {
         /**
@@ -92,7 +116,7 @@ public class Camera implements Cloneable {
          * @throws IllegalArgumentException if vector up isn't orthogonal to vector to
          */
         public Builder setDirection(Vector vTo, Vector vUp) {
-            if (!Util.isZero(vTo.dotProduct(vUp)))
+            if (!isZero(vTo.dotProduct(vUp)))
                 throw new IllegalArgumentException("vTo isn't orthogonal to vUp");
 
             camera.vTo = vTo.normalize();
@@ -107,7 +131,7 @@ public class Camera implements Cloneable {
          * @return A camera
          */
         public Builder setDirection(Point targetPoint, Vector vUp) {
-            camera.vTo = camera.p0.subtract(targetPoint).normalize();
+            camera.vTo = targetPoint.subtract(camera.p0).normalize();
             camera.vRight = camera.vTo.crossProduct(vUp);
             camera.vUp = camera.vRight.crossProduct(camera.vTo);
             return this;
@@ -170,6 +194,10 @@ public class Camera implements Cloneable {
             return null;
         }
 
+        /**
+         * Checking the camera data and intelligizing vector Right
+         * @return a clone of intelligized camera
+         */
         public Camera build() {
             final String className = "Camera";
             final String description = "Missing Render Data:";
@@ -180,8 +208,6 @@ public class Camera implements Cloneable {
                 throw new MissingResourceException(description, className, "vTo");
             if (camera.vUp == null)
                 throw new MissingResourceException(description, className, "vUp");
-            if (camera.vRight == null)
-                throw new MissingResourceException(description, className, "vRight");
 
             if (camera.distance == 0)
                 throw new MissingResourceException(description, className, "distance");
@@ -192,18 +218,18 @@ public class Camera implements Cloneable {
 
             camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
 
-            if (!Util.isZero(camera.vTo.length() - 1) ||
-                    !Util.isZero(camera.vUp.length() - 1) ||
-                    !Util.isZero(camera.vRight.length() - 1))
+            if (!isZero(camera.vTo.length() - 1) ||
+                    !isZero(camera.vUp.length() - 1) ||
+                    !isZero(camera.vRight.length() - 1))
                 throw new IllegalArgumentException("vTo, vUp, vRight must be normalized");
 
             double x = camera.vTo.dotProduct(camera.vUp);
             double y = camera.vTo.dotProduct(camera.vRight);
             double z = camera.vUp.dotProduct(camera.vUp);
 
-            if (!Util.isZero(camera.vTo.dotProduct(camera.vUp)) ||
-                    !Util.isZero(camera.vTo.dotProduct(camera.vRight)) ||
-                    !Util.isZero(camera.vUp.dotProduct(camera.vRight)))
+            if (!isZero(camera.vTo.dotProduct(camera.vUp)) ||
+                    !isZero(camera.vTo.dotProduct(camera.vRight)) ||
+                    !isZero(camera.vUp.dotProduct(camera.vRight)))
                 throw new IllegalArgumentException("vTo, vUp, vRight must be orthogonal");
 
             if (camera.distance <= 0)
