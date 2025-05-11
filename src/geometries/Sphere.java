@@ -21,10 +21,10 @@ public class Sphere extends RadialGeometry {
 
     /**
      * Constructs a new Sphere object with the specified radius and center point.
-     * @param radius the radius of the sphere; must be a positive value.
      * @param center the center point of the sphere in 3D space.
+     * @param radius the radius of the sphere; must be a positive value.
      */
-    public Sphere(double radius, Point center) {
+    public Sphere(Point center, double radius) {
         super(radius);
         this.center = center;
     }

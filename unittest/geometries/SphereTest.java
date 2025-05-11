@@ -24,7 +24,7 @@ class SphereTest {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test that compares the triangle's normal to the expected result.
         // A sphere for test
-        final Sphere sphere = new Sphere(4, new Point(1, -2, 3));
+        final Sphere sphere = new Sphere(new Point(1, -2, 3), 4);
 
         // ensure there are no exceptions
         assertDoesNotThrow(() -> sphere.getNormal(point), "");
@@ -40,7 +40,7 @@ class SphereTest {
         // The center point of sphere at (1,0,0)
         final Point  p100 = new Point(1, 0, 0);
         // A sphere for test
-        final Sphere sphere = new Sphere(1d, p100);
+        final Sphere sphere = new Sphere(p100, 1);
 
         // A point used in some test cases
         final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
