@@ -48,9 +48,9 @@ class GeometriesTest {
         // A triangle used in some test cases - 0 intersections with ray
         final Triangle triangle2 = new Triangle(p021, p221, pm133);
         // A sphere used in some test cases - 2 intersections with ray
-        final Sphere sphere1 = new Sphere(1, new Point(1,1,4));
+        final Sphere sphere1 = new Sphere(new Point(1,1,4), 1);
         // A sphere used in some test cases - 0 intersections with ray
-        final Sphere sphere2 = new Sphere(1, pm100);
+        final Sphere sphere2 = new Sphere(pm100, 1);
 
         // geometries that we didn't implement their findIntersections method yet:
         // A tube used in some test cases - 1 intersections with ray
