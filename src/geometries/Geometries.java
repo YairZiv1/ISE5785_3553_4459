@@ -11,7 +11,7 @@ import java.util.List;
  *  The Geometries class represents collection of geometries shapes
  * @author Yair Ziv and Amitay Yosh'i.
  */
-public class Geometries implements Intersectable{
+public class Geometries extends Intersectable{
     /**
      * List of the geometries shapes
      */
@@ -40,18 +40,18 @@ public class Geometries implements Intersectable{
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection>  calculateIntersectionsHelper(Ray ray) {
         // List that contains all the intersections
-        List<Point> intersections = null;
+        List<Intersection> intersections = null;
 
         // Loop that go threw all the geometries and find the intersections
-        for (Intersectable i : geometries) {
-            List<Point> iIntersections = i.findIntersections(ray);
-            if (iIntersections != null)
+        for (Intersectable geometry : geometries) {
+            var geometryIntersections = geometry.calculateIntersections(ray);
+            if (geometryIntersections != null)
                 if (intersections == null)
-                    intersections = new LinkedList<>(iIntersections);
+                    intersections = new LinkedList<>(geometryIntersections);
                 else
-                    intersections.addAll(iIntersections);
+                    intersections.addAll(geometryIntersections);
         }
         return intersections;
     }

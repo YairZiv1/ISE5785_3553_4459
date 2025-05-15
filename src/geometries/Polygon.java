@@ -14,7 +14,7 @@ import primitives.*;
  *
  * @author Dan.
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -94,7 +94,7 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // test the intersections with polygon's plane
         final var intersections = plane.findIntersections(ray);
         if (intersections == null)
@@ -141,6 +141,7 @@ public class Polygon implements Geometry {
             if (i != 0 && s[i] * s[i-1] <= 0)
                 return null;
         }
-        return intersections;
+        Point intersectionPoint = intersections.getFirst();
+        return List.of(new Intersection(this, intersectionPoint));
     }
 }

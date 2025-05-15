@@ -25,7 +25,7 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // test the intersections with triangle’s plane
         final var intersections = plane.findIntersections(ray);
         if (intersections == null)
@@ -57,8 +57,10 @@ public class Triangle extends Polygon {
         final double s3 = alignZero(rayVector.dotProduct(normal3));
 
         // the point is inside the triangle only if s1, s2 and s3 have the same sign and none of them is 0
-        if ((s1>0 && s2>0 && s3>0) || (s1<0 && s2<0 && s3<0))
-            return intersections;
+        if ((s1>0 && s2>0 && s3>0) || (s1<0 && s2<0 && s3<0)) {
+            Point intersectionPoint = intersections.getFirst();
+            return List.of(new Intersection(this, intersectionPoint));
+        }
 
         return null;
     }

@@ -53,7 +53,7 @@ public class Tube extends RadialGeometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        return null;
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
+        throw new UnsupportedOperationException("This method is not implemented yet");
     }
 }
