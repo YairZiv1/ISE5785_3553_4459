@@ -15,7 +15,7 @@ import static primitives.Util.isZero;
  * @author Yair Ziv and Amitay Yosh'i.
  */
 
-public class Plane implements Geometry {
+public class Plane extends Geometry {
     /**
      * A point on the geometric plane used to define the plane's position
      * in 3D Cartesian space.
@@ -60,7 +60,7 @@ public class Plane implements Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // Point that represents the ray's head
         final Point rayPoint = ray.getPoint(0);
         // Vector that represents the ray's axis
@@ -79,9 +79,8 @@ public class Plane implements Geometry {
             return null;
 
         final double t = alignZero(numerator / denominator);
+
         // if (0 ≥ t) there are no intersections
-        if (t > 0)
-            return List.of(ray.getPoint(t));
-        return null;
+        return t > 0 ? List.of(new Intersection(this, ray.getPoint(t))) : null;
     }
 }
