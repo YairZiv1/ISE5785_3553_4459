@@ -200,4 +200,80 @@ class LightsTest {
                 .writeToImage("lightTrianglesSpotSharp");
     }
 
+    /** Produce a picture of a sphere lighted by all kinds of light sources */
+    @Test
+    void sphereAll() {
+        scene1.geometries.add(sphere);
+        // adding the directional light
+        scene1.lights.add(new DirectionalLight(
+                new Color(500, 500, 500), // intensity
+                new Vector(-1, -1, 0.5) // direction
+                )
+        );
+        // adding the point light
+        scene1.lights.add(new PointLight(
+                new Color(100, 600, 0), // intensity
+                new Point(0, 0, 50) // position
+                ).setKl(0.001).setKq(0.00015) // attenuation coefficients
+        );
+        // adding the spotlight
+        scene1.lights.add(new SpotLight(
+                new Color(800, 0, 0), // intensity
+                new Point(-70, 20, 0), // position
+                new Vector(1.3, -0.5, -1) // direction
+                ).setKl(0.01).setKq(0.000001) // attenuation coefficients
+        );
+        // adding the narrow spotlight
+        scene1.lights.add(new SpotLight(
+                new Color(650, 500, 0), // intensity
+                new Point(-50, -20, 25), // position
+                new Vector(0.2, 0, -0.3) // direction
+                ).setKl(0.001).setKq(0.00004) // attenuation coefficients
+                .setNarrowBeam(60)
+        );
+
+        camera1 //
+                .setResolution(500, 500) //
+                .build() //
+                .renderImage() //
+                .writeToImage("lightSphereAll");
+    }
+
+    /** Produce a picture of two triangles by all kinds of light sources */
+    @Test
+    void trianglesAll() {
+        scene2.geometries.add(triangle1, triangle2);
+        // adding the directional light
+        scene2.lights.add(new DirectionalLight(
+                new Color(800, 100, 100), // intensity
+                new Vector(-2, 0, -1)) // direction
+        );
+        // adding the point light
+        scene2.lights.add(new PointLight(
+                new Color(400, 400, 250), // intensity
+                new Point(30, 0, -50) // position
+                ).setKl(0.002).setKq(0.00025) // attenuation coefficients
+        );
+        // adding the spotlight
+        scene2.lights.add(new SpotLight(
+                new Color(0, 0, 700), // intensity
+                new Point(60, 10, -50), // position
+                new Vector(0, 0, -1) // direction
+                ).setKl(0.009).setKq(0.00001) // attenuation coefficients
+        );
+        // adding the narrow spotlight
+        scene2.lights.add(new SpotLight(
+                new Color(100, 600, 100), // intensity
+                new Point(0, 0, 0), // position
+                new Vector(0, -0.5, -1) // direction
+                ).setKl(0.001).setKq(0.000015) // attenuation coefficients
+                .setNarrowBeam(100)
+        );
+
+        camera2.setResolution(500, 500) //
+                .build() //
+                .renderImage() //
+                .writeToImage("lightTrianglesAll");
+    }
+
 }

@@ -1,5 +1,6 @@
 package geometries;
 
+import lighting.LightSource;
 import primitives.*;
 
 import java.util.List;
@@ -21,6 +22,35 @@ public abstract class Intersectable {
          * An intersection point
          */
         public final Point point;
+        /**
+         * The geometry's material
+         */
+        public final Material material;
+        /**
+         * The direction of the intersecting ray
+         */
+        public Vector v;
+        /**
+         * The geometry's normal at the intersection point
+         */
+        public Vector normal;
+        /**
+         * The scalar product of the direction of the intersecting ray and the normal vectors
+         */
+        public double vNormal;
+        /**
+         * The light source
+         */
+        public LightSource light;
+        /**
+         * The direction from the light source to the intersection point
+         */
+        public Vector l;
+        /**
+         * The scalar product of the direction from the light source to the intersection point and the normal vectors
+         */
+        public double lNormal;
+
 
         /**
          * Constructor for initialization Intersection fields
@@ -30,13 +60,18 @@ public abstract class Intersectable {
         public Intersection(Geometry geometry, Point point) {
             this.geometry = geometry;
             this.point = point;
+
+            if (geometry != null)
+                this.material = geometry.getMaterial();
+            else
+                this.material = null;
         }
 
         @Override
         public boolean equals(Object obj) {
             if (this == obj) return true;
             return (obj instanceof Intersection other)
-                    && geometry.equals(other.geometry) && point.equals(other.point);
+                    && geometry == other.geometry && point.equals(other.point);
         }
 
         @Override

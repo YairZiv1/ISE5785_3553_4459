@@ -78,7 +78,8 @@ public class Ray {
      */
     public Point findClosestPoint(List<Point> points) {
         return points == null || points.isEmpty() ? null
-                : findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
+                : findClosestIntersection(
+                        points.stream().map(p -> new Intersection(null, p)).toList()).point;
     }
 
     /**
