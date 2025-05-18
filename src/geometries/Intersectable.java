@@ -61,10 +61,7 @@ public abstract class Intersectable {
             this.geometry = geometry;
             this.point = point;
 
-            if (geometry != null)
-                this.material = geometry.getMaterial();
-            else
-                this.material = null;
+            this.material = geometry != null ? geometry.getMaterial() : null;
         }
 
         @Override

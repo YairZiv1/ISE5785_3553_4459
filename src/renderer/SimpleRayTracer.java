@@ -87,12 +87,10 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return the specular reflection as a Double3 coefficient
      */
     private Double3 calcSpecular(Intersection intersection) {
-        Vector r = intersection.l.subtract(intersection.normal.scale(2 * intersection.lNormal)).normalize();
-        double vr = alignZero(intersection.v.scale(-1).dotProduct(r));
-        if (vr <= 0 || intersection.material == null)
-            return Double3.ZERO; // no specular reflection
+        Vector r = intersection.l.subtract(intersection.normal.scale(2 * intersection.lNormal));
+        double vr = -1 * intersection.v.dotProduct(r);
 
-        return intersection.material.kS.scale(Math.pow(vr, intersection.material.nSh));
+        return intersection.material.kS.scale(Math.pow(Math.max(0, vr), intersection.material.nSh));
     }
 
     /**
@@ -102,9 +100,6 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return the diffuse reflection as a Double3 coefficient
      */
     private Double3 calcDiffusive(Intersection intersection) {
-        if (intersection.material == null)
-            return Double3.ZERO;
-
         return intersection.material.kD.scale(Math.abs(intersection.lNormal));
     }
 
