@@ -1,6 +1,5 @@
 package geometries;
 
-import primitives.Point;
 import primitives.Ray;
 
 import java.util.Collections;
@@ -8,12 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *  The Geometries class represents collection of geometries shapes
+ *  The Geometries class represents a collection of geometry shapes
  * @author Yair Ziv and Amitay Yosh'i.
  */
 public class Geometries extends Intersectable{
     /**
-     * List of the geometries shapes
+     * List of the geometry shapes
      */
     private final List<Intersectable> geometries = new LinkedList<Intersectable>();
 
@@ -40,13 +39,13 @@ public class Geometries extends Intersectable{
     }
 
     @Override
-    protected List<Intersection>  calculateIntersectionsHelper(Ray ray) {
+    protected List<Intersection>  calculateIntersectionsHelper(Ray ray, double maxDistance) {
         // List that contains all the intersections
         List<Intersection> intersections = null;
 
-        // Loop that go threw all the geometries and find the intersections
+        // Loop that goes threw all the geometries and found the intersections
         for (Intersectable geometry : geometries) {
-            var geometryIntersections = geometry.calculateIntersections(ray);
+            var geometryIntersections = geometry.calculateIntersections(ray, maxDistance);
             if (geometryIntersections != null)
                 if (intersections == null)
                     intersections = new LinkedList<>(geometryIntersections);

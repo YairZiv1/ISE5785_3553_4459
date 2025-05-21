@@ -35,15 +35,15 @@ class GeometriesTest {
         // A point used in some test cases at (-1,3,3)
         final Point pm133 = new Point(-1,3,3);
 
-        // A plane used in some test cases - 1 intersections with ray
+        // A plane used in some test cases - 1 intersection with ray
         final Plane plane1 = new Plane(pm133, v001);
         // A plane used in some test cases - 0 intersections with ray
         final Plane plane2 = new Plane(pm100, v001);
-        // A polygon used in some test cases - 1 intersections with ray
+        // A polygon used in some test cases - 1 intersection with ray
         final Polygon polygon1 = new Polygon(p021, p221, new Point(2,-1,3), p0m13);
         // A polygon used in some test cases - 0 intersections with ray
         final Polygon polygon2 = new Polygon(p021, p221, new Point(1,3,3), pm133);
-        // A triangle used in some test cases - 1 intersections with ray
+        // A triangle used in some test cases - 1 intersection with ray
         final Triangle triangle1 = new Triangle(p021, p221, p0m13);
         // A triangle used in some test cases - 0 intersections with ray
         final Triangle triangle2 = new Triangle(p021, p221, pm133);
@@ -89,5 +89,70 @@ class GeometriesTest {
                 (plane1, polygon1, triangle1, sphere1).findIntersections(ray);
         assertNotNull(result14, "Can't be empty list");
         assertEquals(5, result14.size(), "Wrong number of points");
+    }
+
+    /**
+     * Test method for {@link Geometries#calculateIntersections(Ray, double)}.
+     */
+    @Test
+    void testCalculateIntersections() {
+        // The axis vector of ray to (0,0,1)
+        final Vector v001 = new Vector(0, 0, 1);
+        // A ray for test
+        final Ray ray = new Ray(new Point(1, 1, 1), v001);
+
+        // A plane used in some test cases - 1 intersection with ray
+        final Plane plane = new Plane(new Point(-1, 3, 3), v001);
+        // A polygon used in some test cases - 1 intersection with ray
+        final Polygon polygon = new Polygon(
+                new Point(0, 2, 1),
+                new Point(2, 2, 1),
+                new Point(2, -1, 3),
+                new Point(0, -1, 3)
+        );
+        // A triangle used in some test cases - 1 intersection with ray
+        final Triangle triangle = new Triangle(
+                new Point(0, 2, 2),
+                new Point(2, 2, 2),
+                new Point(0, -1, 4)
+        );
+        // A sphere used in some test cases - 2 intersections with ray
+        final Sphere sphere = new Sphere(new Point(1, 1, 4), 1);
+
+        // geometries that we didn't implement their findIntersections method yet:
+        // A tube used in some test cases - 1 intersections with ray
+        // final Tube tube = new Tube(2, new Ray(new Point(1,1,0),new Vector(0,1,0)));
+        // A cylinder used in some test cases - 2 intersections with ray
+        // final Cylinder cylinder = new Cylinder(2, new Ray(new Point(1,1,6),v001), 6);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Some intersections within range and some not
+        final var result01 = new Geometries
+                (plane, polygon, triangle, sphere).calculateIntersections(ray, 1.8);
+        assertNotNull(result01, "Can't be empty list");
+        assertEquals(2, result01.size(), "Wrong number of points");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: No intersections within range at all
+        assertNull(new Geometries(plane, polygon, triangle, sphere).calculateIntersections(ray, 0.5),
+                "no intersections");
+
+        // TC12: Only one intersection within range
+        final var result12 = new Geometries
+                (plane, polygon, triangle, sphere).calculateIntersections(ray, 1.5);
+        assertNotNull(result12, "Can't be empty list");
+        assertEquals(1, result12.size(), "Wrong number of points");
+
+        // TC13: All intersections within range
+        final var result13 = new Geometries
+                (plane, polygon, triangle, sphere).calculateIntersections(ray, 5);
+        assertNotNull(result13, "Can't be empty list");
+        assertEquals(5, result13.size(), "Wrong number of points");
+
+        // TC14: Ray "stops" at some intersections
+        final var result14 = new Geometries
+                (plane, polygon, triangle, sphere).calculateIntersections(ray, 2);
+        assertNotNull(result14, "Can't be empty list");
+        assertEquals(4, result14.size(), "Wrong number of points");
     }
 }

@@ -154,4 +154,59 @@ class SphereTest {
         assertEquals(List.of(new Point(1.5, 0, 0.866025403784439)), result42,
                 "Ray starts inside sphere and orthogonal");
     }
+
+    /**
+     * Test method for {@link Sphere#calculateIntersections(Ray, double)}.
+     */
+    @Test
+    void testCalculateIntersections() {
+        // A sphere for test
+        final Sphere sphere = new Sphere(Point.ZERO, 3);
+        // A vector used in some test cases to (1,0,0)
+        Vector v100 = new Vector(1, 0, 0);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray "stops" before the sphere
+        assertNull(sphere.calculateIntersections(new Ray(new Point(-6, 2.5, 0), v100), 3.5),
+                "ray stops before the sphere");
+
+        // TC02: Ray starts before the sphere and "stops" inside it
+        final var result02 = sphere.calculateIntersections(new Ray(new Point(-4, 1.5, 0), v100), 3.5);
+        assertNotNull(result02, "Can't be empty list");
+        assertEquals(1, result02.size(), "Wrong number of points");
+
+        //TC03: Ray starts and "stops" inside the sphere
+        assertNull(sphere.calculateIntersections(new Ray(new Point(-2, 0.5, 0), v100), 3.5),
+                "ray starts and stops inside the sphere");
+
+        // TC04: Ray starts inside the sphere and "stops" after it
+        final var result04 = sphere.calculateIntersections(new Ray(new Point(2, -1.5, 0), v100), 3.5);
+        assertNotNull(result04, "Can't be empty list");
+        assertEquals(1, result04.size(), "Wrong number of points");
+
+        // TC05: Ray starts after the sphere
+        assertNull(sphere.calculateIntersections(new Ray(new Point(4, -2.5, 0), v100), 3.5),
+                "ray starts after the sphere");
+
+        // TC06: Ray crosses the sphere, starts before it and "stops" after it
+        final var result06 = sphere.calculateIntersections(new Ray(new Point(-4, 1.5, 0), v100), 8);
+        assertNotNull(result06, "Can't be empty list");
+        assertEquals(2, result06.size(), "Wrong number of points");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: Ray starts before the sphere and "stops" at the first intersection point
+        final var result11 = sphere.calculateIntersections(new Ray(new Point(-4, 0, 0), v100), 1);
+        assertNotNull(result11, "Can't be empty list");
+        assertEquals(1, result11.size(), "Wrong number of points");
+
+        // TC11: Ray starts before the sphere and "stops" at the second intersection point
+        final var result12 = sphere.calculateIntersections(new Ray(new Point(-4, 0, 0), v100), 7);
+        assertNotNull(result12, "Can't be empty list");
+        assertEquals(2, result12.size(), "Wrong number of points");
+
+        // TC11: Ray starts inside the sphere and "stops" at the intersection point
+        final var result13 = sphere.calculateIntersections(new Ray(new Point(-2, 0, 0), v100), 5);
+        assertNotNull(result13, "Can't be empty list");
+        assertEquals(1, result13.size(), "Wrong number of points");
+    }
 }

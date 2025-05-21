@@ -6,7 +6,7 @@ import primitives.*;
 import java.util.List;
 
 /**
- * The Intersectable abstract class represents shapes that can be intersected by ray
+ * The Intersectable abstract class represents shapes that ray can intersect
  * @author Yair Ziv and Amitay Yosh'i.
  */
 public abstract class Intersectable {
@@ -89,23 +89,33 @@ public abstract class Intersectable {
     }
 
     /**
-     * Calculates the intersection between a ray and a geometry, every geometry class implementing it.
+     * Calculates the intersection between a ray and a geometry, up to the max distance.
+     * Every geometry class implements it.
      * Why not do everything in the method calculateIntersections?
      * To use the NVI (non-virtual-interface) pattern.
-     * The method should be private according to NVI, but java does not allow private abstract methods.
-     * @param ray the ray that make the intersection
+     * The method should be private, according to NVI, but java does not allow private abstract methods.
+     * @param ray the ray that makes the intersection
+     * @param maxDistance the maximum distance of the intersection from the head of the ray
      * @return a list of the intersection and the geometry that intersected
      */
-    protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray);
+    protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance);
 
     /**
-     * This method is calling to calculateIntersectionsHelper.
-     * This method is can't be overridden (according to NVI pattern)
-     * and now - no geometry class can change the general behavior.
-     * @param ray the ray that make the intersection
+     * Calculates the intersection between a ray and a geometry, up to the max distance.
+     * @param ray the ray that makes the intersection
+     * @param maxDistance the maximum distance of the intersection from the head of the ray
+     * @return a list of the intersection and the geometry that intersected
+     */
+    public final List<Intersection> calculateIntersections(Ray ray, double maxDistance) {
+        return calculateIntersectionsHelper(ray, maxDistance);
+    }
+
+    /**
+     * Calculates the intersection between a ray and a geometry.
+     * @param ray the ray that makes the intersection
      * @return a list of the intersection and the geometry that intersected
      */
     public final List<Intersection> calculateIntersections(Ray ray) {
-        return calculateIntersectionsHelper(ray);
+        return calculateIntersections(ray, Double.POSITIVE_INFINITY);
     }
 }

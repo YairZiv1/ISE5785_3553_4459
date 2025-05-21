@@ -54,7 +54,7 @@ public class Cylinder extends Tube {
     }
 
     @Override
-    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
         throw new UnsupportedOperationException("This method is not implemented yet.");
     }
 }

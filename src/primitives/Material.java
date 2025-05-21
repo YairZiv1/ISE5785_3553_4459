@@ -1,7 +1,7 @@
 package primitives;
 
 /**
- * Class Material define the material of each geometric body.
+ * Class Material defines the material of each geometric body.
  * This class if PDS - Passive Data Structure.
  * @author Yair Ziv and Amitay Yosh'i.
  */
@@ -11,11 +11,11 @@ public class Material {
      */
     public Double3 kA = Double3.ONE;
     /**
-     * The Ambient light specular attenuation coefficient, initialized with (0,0,0)
+     * The specular attenuation coefficient, initialized with (0,0,0)
      */
     public Double3 kS = Double3.ZERO;
     /**
-     * The Ambient light diffusive attenuation coefficient, initialized with (0,0,0)
+     * The diffusive attenuation coefficient, initialized with (0,0,0)
      */
     public Double3 kD = Double3.ZERO;
     /**

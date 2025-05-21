@@ -165,4 +165,42 @@ class PlaneTest {
         assertNull(plane.findIntersections(new Ray(p001, v001)),
                 "Ray begins at reference point of plane");
     }
+
+    /**
+     * Test method for {@link Plane#calculateIntersections(Ray, double)}.
+     */
+    @Test
+    void testCalculateIntersections() {
+        // A point for tests at (0,1,1)
+        final Point p011 = new Point(0, 1, 1);
+        // A point for tests at (0,1,0)
+        final Point p010 = new Point(0, 1, 0);
+        // A point for tests at (0,0,1)
+        final Point p001 = new Point(0, 0, 1);
+        // A plane for test
+        final Plane plane = new Plane(p001, p010, p011);
+
+        // A vector used in some test cases to (1,0,0)
+        Vector v100 = new Vector(1, 0, 0);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray "stops" before the plane
+        assertNull(plane.calculateIntersections(new Ray(new Point(-3, 0, 0), v100), 2),
+                "ray stops before the plane");
+
+        // TC02: Ray crosses the plane
+        final var result02 = plane.calculateIntersections(new Ray(new Point(-1, 0, 0), v100), 2);
+        assertNotNull(result02, "Can't be empty list");
+        assertEquals(1, result02.size(), "Wrong number of points");
+
+        // TC03: Ray starts after the plane
+        assertNull(plane.calculateIntersections(new Ray(new Point(1, 0, 0), v100), 2),
+                "ray starts after the plane");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: Ray "stops" at the plane
+        final var result11 = plane.calculateIntersections(new Ray(new Point(-2, 0, 0), v100), 2);
+        assertNotNull(result11, "Can't be empty list");
+        assertEquals(1, result11.size(), "Wrong number of points");
+    }
 }

@@ -127,4 +127,44 @@ class PolygonTest {
         assertNull(polygon.findIntersections(new Ray(new Point(-2,2,-2), v001)),
                 "Ray on edge's continuation");
     }
+
+    /**
+     * Test method for {@link Polygon#calculateIntersections(Ray, double)}.
+     */
+    @Test
+    void testCalculateIntersections() {
+        // A point for tests at (0,-1,1)
+        final Point p0m11 = new Point(0, -1, 1);
+        // A point for tests at (0,-1,-1)
+        final Point p0m1m1 = new Point(0, -1, -1);
+        // A point for tests at (0,1,1)
+        final Point p011 = new Point(0, 1, 1);
+        // A point for tests at (0,1,-1)
+        final Point p01m1 = new Point(0, 1, -1);
+        // A plane for test
+        final Polygon polygon = new Polygon(p0m11, p0m1m1, p01m1, p011);
+
+        // A vector used in some test cases to (1,0,0)
+        Vector v100 = new Vector(1, 0, 0);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray "stops" before the polygon
+        assertNull(polygon.calculateIntersections(new Ray(new Point(-3, 0, 0), v100), 2),
+                "ray stops before the polygon");
+
+        // TC02: Ray crosses the polygon
+        final var result02 = polygon.calculateIntersections(new Ray(new Point(-1, 0, 0), v100), 2);
+        assertNotNull(result02, "Can't be empty list");
+        assertEquals(1, result02.size(), "Wrong number of points");
+
+        // TC03: Ray starts after the polygon
+        assertNull(polygon.calculateIntersections(new Ray(new Point(1, 0, 0), v100), 2),
+                "ray starts after the polygon");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: Ray "stops" at the polygon
+        final var result11 = polygon.calculateIntersections(new Ray(new Point(-2, 0, 0), v100), 2);
+        assertNotNull(result11, "Can't be empty list");
+        assertEquals(1, result11.size(), "Wrong number of points");
+    }
 }

@@ -245,29 +245,29 @@ class LightsTest {
         scene2.geometries.add(triangle1, triangle2);
         // adding the directional light
         scene2.lights.add(new DirectionalLight(
-                new Color(800, 100, 100), // intensity
+                new Color(450, 100, 100), // intensity
                 new Vector(-2, 0, -1)) // direction
         );
         // adding the point light
         scene2.lights.add(new PointLight(
-                new Color(400, 400, 250), // intensity
-                new Point(30, 0, -50) // position
+                        new Color(300, 400, 150), // intensity
+                        new Point(30, 0, -50) // position
                 ).setKl(0.002).setKq(0.00025) // attenuation coefficients
         );
         // adding the spotlight
         scene2.lights.add(new SpotLight(
-                new Color(0, 0, 700), // intensity
-                new Point(60, 10, -50), // position
-                new Vector(0, 0, -1) // direction
+                        new Color(0, 0, 400), // intensity
+                        new Point(60, 10, -80), // position
+                        new Vector(0, 0, -1) // direction
                 ).setKl(0.009).setKq(0.00001) // attenuation coefficients
         );
         // adding the narrow spotlight
         scene2.lights.add(new SpotLight(
-                new Color(100, 600, 100), // intensity
-                new Point(0, 0, 0), // position
-                new Vector(0, -0.5, -1) // direction
+                        new Color(400, 400, 400), // intensity
+                        new Point(0, 0, 0), // position
+                        new Vector(0, -0.5, -1) // direction
                 ).setKl(0.001).setKq(0.000015) // attenuation coefficients
-                .setNarrowBeam(100)
+                        .setNarrowBeam(100)
         );
 
         camera2.setResolution(500, 500) //

@@ -16,11 +16,36 @@ import static primitives.Util.isZero;
  */
 public class SimpleRayTracer extends RayTracerBase {
     /**
+     * A small constant used represents the amount of ray origin movement for shadow rays
+     */
+    private static final double DELTA = 0.1;
+    /**
      * Constructs a new SimpleRayTracer with the given scene.
      * @param scene the scene that will be rendered using this ray tracer
      */
     public SimpleRayTracer(Scene scene) {
         super(scene);
+    }
+
+    /**
+     * Checks if the intersection point is unshaded by any geometry.
+     * @param intersection the intersection point to check
+     * @return true if the intersection point is unshaded, false otherwise
+     */
+    private boolean unshaded(Intersection intersection) {
+        Vector pointToLight = intersection.l.scale(-1); // from the point to the light source
+        Vector deltaVector = intersection.normal;
+        // if the light is behind the normal, move in the opposite direction
+        if(pointToLight.dotProduct(deltaVector) < 0)
+            deltaVector = deltaVector.scale(-DELTA);
+        // if the light is in front of the normal, move in the same direction
+        else
+            deltaVector = deltaVector.scale(DELTA);
+
+        Point point = intersection.point.add(deltaVector); // move the point slightly in the direction of deltaVector
+        Ray ray = new Ray(point, pointToLight); // create a ray from the point to the light source
+        var intersections = scene.geometries.calculateIntersections(ray, intersection.light.getDistance(point));
+        return intersections == null;
     }
 
     /**
@@ -31,7 +56,7 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return false if the dot product is equal to zero, and true otherwise
      */
     public boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
-        intersection.v = rayDirection.normalize();
+        intersection.v = rayDirection;
         intersection.normal = intersection.geometry.getNormal(intersection.point);
         intersection.vNormal = intersection.v.dotProduct(intersection.normal);
 
@@ -46,13 +71,13 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return false if both dot products are equal to zero, and true otherwise
      */
     public boolean setLightSource(Intersection intersection, LightSource light) {
-        // Assumes that preprocessIntersection has already been executed, otherwise there may be
+        // Assumes that preprocessIntersection has already been executed; otherwise there may be
         // problems running the code. But it is only called internally, so there are no checks.
         intersection.light = light;
         intersection.l = light.getL(intersection.point);
         intersection.lNormal = intersection.l.dotProduct(intersection.normal);
 
-        return !(isZero(intersection.vNormal) && isZero(intersection.lNormal));
+        return alignZero(intersection.lNormal * intersection.vNormal) > 0;
     }
 
     /**
@@ -65,17 +90,14 @@ public class SimpleRayTracer extends RayTracerBase {
     private Color calcColorLocalEffects(Intersection intersection) {
         Color color = intersection.geometry.getEmission();
         for (LightSource lightSource : scene.lights) {
-            // also checks if sign(nl) == sign(nv))
-            if (!setLightSource(intersection, lightSource) ||
-                    alignZero(intersection.lNormal * intersection.vNormal) <= 0 )
+            // also checks if sign(lNormal) == sign(vNormal)) and if the intersection is unshaded
+            if (!setLightSource(intersection, lightSource) || !unshaded(intersection))
                 continue;
 
             Color iL = lightSource.getIntensity(intersection.point);
-            color = color.add(
-                    iL.scale(
-                            calcDiffusive(intersection).add(calcSpecular(intersection))
-                    )
-            );
+            color = color
+                    .add(iL.scale(calcDiffusive(intersection)
+                            .add(calcSpecular(intersection))));
         }
         return color;
     }

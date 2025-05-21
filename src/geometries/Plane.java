@@ -10,7 +10,7 @@ import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
- * The Plane class represents a 2D plane of Euclidean geometry in Cartesian
+ * The Plane class represents a 2D plane of Euclidean geometry in a Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i.
  */
@@ -60,7 +60,7 @@ public class Plane extends Geometry {
     }
 
     @Override
-    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
         // Point that represents the ray's head
         final Point rayPoint = ray.getPoint(0);
         // Vector that represents the ray's axis
@@ -78,9 +78,10 @@ public class Plane extends Geometry {
         if (isZero(denominator))
             return null;
 
-        final double t = alignZero(numerator / denominator);
+        final double t = numerator / denominator;
 
-        // if (0 ≥ t) there are no intersections
-        return t > 0 ? List.of(new Intersection(this, ray.getPoint(t))) : null;
+        // if (0 ≥ t) or (maxDistance < t) there are no intersections
+        return (alignZero(t) > 0 && alignZero(t - maxDistance) <= 0) ?
+                List.of(new Intersection(this, ray.getPoint(t))) : null;
     }
 }

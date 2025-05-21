@@ -89,4 +89,42 @@ class TriangleTest {
         assertNull(triangle.findIntersections(new Ray(new Point(-2,2,-2), v001)),
                 "Ray on edge's continuation");
     }
+
+    /**
+     * Test method for {@link Triangle#calculateIntersections(Ray, double)}.
+     */
+    @Test
+    void testCalculateIntersections() {
+        // A point for tests at (0,-1,1)
+        final Point p0m11 = new Point(0, -1, 1);
+        // A point for tests at (0,-1,-1)
+        final Point p0m1m1 = new Point(0, -1, -1);
+        // A point for tests at (0,1,0)
+        final Point p010 = new Point(0, 1, 0);
+        // A plane for test
+        final Triangle triangle = new Triangle(p0m11, p0m1m1, p010);
+
+        // A vector used in some test cases to (1,0,0)
+        Vector v100 = new Vector(1, 0, 0);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray "stops" before the triangle
+        assertNull(triangle.calculateIntersections(new Ray(new Point(-3, 0, 0), v100), 2),
+                "ray stops before the triangle");
+
+        // TC02: Ray crosses the triangle
+        final var result02 = triangle.calculateIntersections(new Ray(new Point(-1, 0, 0), v100), 2);
+        assertNotNull(result02, "Can't be empty list");
+        assertEquals(1, result02.size(), "Wrong number of points");
+
+        // TC03: Ray starts after the triangle
+        assertNull(triangle.calculateIntersections(new Ray(new Point(1, 0, 0), v100), 2),
+                "ray starts after the triangle");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: Ray "stops" at the triangle
+        final var result11 = triangle.calculateIntersections(new Ray(new Point(-2, 0, 0), v100), 2);
+        assertNotNull(result11, "Can't be empty list");
+        assertEquals(1, result11.size(), "Wrong number of points");
+    }
 }
