@@ -5,6 +5,7 @@ import primitives.Ray;
 import primitives.Vector;
 import primitives.Util;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -54,6 +55,85 @@ public class Tube extends RadialGeometry {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
-        throw new UnsupportedOperationException("This method is not implemented yet");
+        // The head of the intersecting ray.
+        Point rayHead = ray.getPoint(0);
+        // The head of the ray that represents the tube.
+        Point tubeHead = ray.getPoint(0);
+
+        // The direction of the intersecting ray.
+        Vector rayDirection = ray.getVector();
+        // The direction of the ray that represents the tube.
+        Vector axisDirection = ray.getVector();
+
+        // The dot product of the two directions.
+        double productDirections = rayDirection.dotProduct(axisDirection);
+
+        // In case the head of the ray is the same as head of the tube's axis:
+        if (rayHead.equals(tubeHead)) {
+            // In case the direction of the ray orthogonal to the direction of the tube's axis:
+            // calculate the intersection directly using the radius (of course, checking the max distance).
+            if (Util.isZero(productDirections))
+                return Util.alignZero(radius - maxDistance) < 0 ?
+                        List.of(new Intersection(this, ray.getPoint(radius))) : null;
+
+            // in case the direction of the ray parallel to the direction of the tube's axis:
+            // there are 0 intersections.
+            if (rayDirection.equals(axisDirection.scale(productDirections)))
+                return null;
+
+            // The distance between the head's and the intersection.
+            double t = radius / rayDirection.subtract(axisDirection.scale(productDirections)).length();
+            return Util.alignZero(t - maxDistance) < 0 ?
+                    List.of(new Intersection(this, ray.getPoint(t))) : null;
+        }
+
+        // Vector from the head of the tube's axis to the head of the intersecting ray.
+        Vector deltaP = ray.getPoint(0).subtract(tubeHead);
+        // The dot product between deltaP and the direction of the tube's axis.
+        double dpV = deltaP.dotProduct(axisDirection);
+
+        // Calculating the coefficients of the quadratic equation.
+        double a = 1 - productDirections * productDirections;
+        double b = 2 * (rayDirection.dotProduct(deltaP) - productDirections * dpV);
+        double c = deltaP.lengthSquared() - dpV * dpV - radius * radius;
+
+        if (Util.isZero(a)) {
+            if (Util.isZero(b))
+                return null;
+            return Util.alignZero(-c / b - maxDistance) < 0 ? List.of(new Intersection(this, ray.getPoint(-c / b))) : null;
+        }
+
+        // The discriminant
+        double discriminant = Util.alignZero(b * b - 4 * a * c);
+
+        // If the discriminant is negative - there are 0 intersections.
+        if (discriminant < 0)
+            return null;
+
+        double t1 = Util.alignZero(-(b + Math.sqrt(discriminant)) / (2 * a));
+        double t2 = Util.alignZero(-(b - Math.sqrt(discriminant)) / (2 * a));
+
+        if (discriminant <= 0)
+            return null;
+
+        List<Intersection> intersections = null;
+
+        if (t1 > 0 && Util.alignZero(t1 - maxDistance) < 0) {
+            Point point = ray.getPoint(t1);
+            if (!point.equals(rayHead)) {
+                intersections = new LinkedList<>();
+                intersections.add(new Intersection(this, point));
+            }
+        }
+        if (t2 > 0 && Util.alignZero(t2 - maxDistance) < 0) {
+            Point point = ray.getPoint(t2);
+            if (!point.equals(rayHead)) {
+                if (intersections == null)
+                    intersections = new LinkedList<>();
+                intersections.add(new Intersection(this, ray.getPoint(t2)));
+            }
+        }
+
+        return intersections;
     }
 }

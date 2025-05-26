@@ -19,6 +19,14 @@ public class Material {
      */
     public Double3 kD = Double3.ZERO;
     /**
+     * The transparency attenuation coefficient, initialized with (0,0,0)
+     */
+    public Double3 kT = Double3.ZERO;
+    /**
+     * The reflection attenuation coefficient, initialized with (0,0,0)
+     */
+    public Double3 kR = Double3.ZERO;
+    /**
      * the material’s shininess, initialized with 0
      */
     public int nSh = 0;
@@ -49,8 +57,8 @@ public class Material {
     }
 
     /**
-     * Setter for the Ambient light specular attenuation coefficient
-     * @param kS the Ambient light specular attenuation coefficient
+     * Setter for the specular attenuation coefficient
+     * @param kS the specular attenuation coefficient
      * @return the Material
      */
     public Material setKS(Double3 kS) {
@@ -59,8 +67,8 @@ public class Material {
     }
 
     /**
-     * Setter for the Ambient light specular attenuation coefficient
-     * @param kS the Ambient light specular attenuation coefficient
+     * Setter for the specular attenuation coefficient
+     * @param kS the specular attenuation coefficient
      * @return the Material
      */
     public Material setKS(double kS) {
@@ -69,8 +77,8 @@ public class Material {
     }
 
     /**
-     * Setter for the Ambient light diffusive attenuation coefficient
-     * @param kD the Ambient light diffusive attenuation coefficient
+     * Setter for the diffusive attenuation coefficient
+     * @param kD the diffusive attenuation coefficient
      * @return the Material
      */
     public Material setKD(Double3 kD) {
@@ -79,12 +87,52 @@ public class Material {
     }
 
     /**
-     * Setter for the Ambient light diffusive attenuation coefficient
-     * @param kD the Ambient light diffusive attenuation coefficient
+     * Setter for the diffusive attenuation coefficient
+     * @param kD the diffusive attenuation coefficient
      * @return the Material
      */
     public Material setKD(double kD) {
         this.kD = new Double3(kD);
+        return this;
+    }
+
+    /**
+     * Setter for the transparency attenuation coefficient
+     * @param kT the transparency attenuation coefficient
+     * @return the Material
+     */
+    public Material setKT(double kT) {
+        this.kT = new Double3(kT);
+        return this;
+    }
+
+    /**
+     * Setter for the transparency attenuation coefficient
+     * @param kT the transparency attenuation coefficient
+     * @return the Material
+     */
+    public Material setKT(Double3 kT) {
+        this.kT = kT;
+        return this;
+    }
+
+    /**
+     * Setter for the reflection attenuation coefficient
+     * @param kR the reflection attenuation coefficient
+     * @return the Material
+     */
+    public Material setKR(double kR) {
+        this.kR = new Double3(kR);
+        return this;
+    }
+
+    /**
+     * Setter for the reflection attenuation coefficient
+     * @param kR the reflection attenuation coefficient
+     * @return the Material
+     */
+    public Material setKR(Double3 kR) {
+        this.kR = kR;
         return this;
     }
 

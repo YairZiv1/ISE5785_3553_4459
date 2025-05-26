@@ -10,6 +10,11 @@ import java.util.List;
  */
 public class Ray {
     /**
+     * A small constant used represents the amount of ray origin movement for shadow rays
+     */
+    private static final double DELTA = 0.1;
+
+    /**
      * The starting point of the ray in 3D space.
      * It is immutable and cannot be changed once the ray is constructed.
      */
@@ -31,6 +36,23 @@ public class Ray {
     public Ray(Point p, Vector v) {
         this.p = p;
         this.v = v.normalize();
+    }
+
+    /**
+     * Construct a ray with starting point, direction and normal.
+     * This constructor ensures that the reflected and refracted rays -
+     * won't intersect the geometry again (avoid self-intersections).
+     * @param p the starting point of the ray
+     * @param v the direction vector of the ray
+     * @param normal the surface normal at the point of origin
+     */
+    public Ray(Point p, Vector v, Vector normal) {
+        this.v = v.normalize();
+        double vNormal = v.dotProduct(normal);
+        if (Util.isZero(vNormal))
+            this.p = p;
+        else
+            this.p = p.add(normal.scale(vNormal > 0 ? DELTA : -DELTA));
     }
 
     /**

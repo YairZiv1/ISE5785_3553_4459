@@ -5,6 +5,7 @@ import primitives.Ray;
 import primitives.Util;
 import primitives.Vector;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -19,6 +20,16 @@ public class Cylinder extends Tube {
     private final double height;
 
     /**
+     * The bottom base of the cylinder, represented as a circle.
+     */
+    private final Circle bottomBase;
+
+    /**
+     * The top base of the cylinder, represented as a circle.
+     */
+    private final Circle topBase;
+
+    /**
      * Constructs a Cylinder object with the specified radius, ray, and height.
      * @param radius the radius of the cylinder.
      * @param ray    the ray of the cylinder.
@@ -27,6 +38,14 @@ public class Cylinder extends Tube {
     public Cylinder(double radius, Ray ray, double height) {
         super(radius, ray);
         this.height = height;
+
+        // Calculates the bottom circle of the cylinder
+        Point bottomCenter = ray.getPoint(0);
+        bottomBase = new Circle(bottomCenter, radius, getNormal(bottomCenter));
+
+        // Calculates the top circle of the cylinder
+        Point topCenter = bottomCenter.add(ray.getVector().scale(height));
+        topBase = new Circle(topCenter, radius, getNormal(topCenter));
     }
 
     @Override
@@ -55,6 +74,45 @@ public class Cylinder extends Tube {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
-        throw new UnsupportedOperationException("This method is not implemented yet.");
+        Point baseCenter = ray.getPoint(0);
+        List<Intersection> intersections = null;
+        var list = super.calculateIntersectionsHelper(ray, maxDistance);
+        if (list != null)
+            for (Intersection intersection : list) {
+                double distance = Util.alignZero(intersection.point.subtract(baseCenter).dotProduct(ray.getVector()));
+                if (distance > 0 && Util.alignZero(distance - height) < 0) {
+                    if (intersections == null)
+                        intersections = new LinkedList<>();
+                    intersections.add(new Intersection(this, intersection.point));
+                }
+            }
+
+        // Check intersection with bottom base
+        intersections = getIntersections(ray, bottomBase, intersections, maxDistance);
+
+        // Check intersection with top base
+        intersections = getIntersections(ray, topBase, intersections, maxDistance);
+
+        return intersections;
+    }
+
+    /**
+     * Helper method to calculate intersections between a ray and a circular base of the cylinder.
+     * @param ray the ray to intersect
+     * @param circle the circular base (either bottom or top)
+     * @param intersections  the existing list of intersections
+     * @param maxDistance the maximum allowed distance from the ray's origin to an intersection point
+     * @return an updated list of intersections including any new intersection with the given circle
+     */
+    private List<Intersection> getIntersections(Ray ray, Circle circle, List<Intersection> intersections, double maxDistance) {
+        // Find intersections with  the circles
+        var list = circle.calculateIntersections(ray, maxDistance);
+
+        if (list != null) {
+            if (intersections == null)
+                intersections = new LinkedList<>();
+            intersections.add(new Intersection(this, list.getFirst().point));
+        }
+        return intersections;
     }
 }
