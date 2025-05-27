@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * The Cylinder class represents a 3D cylinder object of Euclidean geometry in Cartesian
+ * The Cylinder class represents a 3D cylinder object of Euclidean geometry in a Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i.
  */
@@ -61,13 +61,13 @@ public class Cylinder extends Tube {
 
         final double t = rayVector.dotProduct(p.subtract(rayPoint));
 
-        // In case the given Point is on the lower base.
+        // In case, the given Point is on the lower base.
         if (Util.isZero(t))
             return rayVector.scale(-1);
-        // In case the given Point is on the upper base.
+        // In case, the given Point is on the upper base.
         else if (t == height)
             return rayVector;
-        // In case the Point is on the side - use super.
+        // In case, the Point is on the side - use super.
         else
             return super.getNormal(p);
     }
@@ -105,7 +105,7 @@ public class Cylinder extends Tube {
      * @return an updated list of intersections including any new intersection with the given circle
      */
     private List<Intersection> getIntersections(Ray ray, Circle circle, List<Intersection> intersections, double maxDistance) {
-        // Find intersections with  the circles
+        // Find intersections with the circles
         var list = circle.calculateIntersections(ray, maxDistance);
 
         if (list != null) {

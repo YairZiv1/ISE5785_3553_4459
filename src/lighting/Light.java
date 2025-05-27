@@ -8,7 +8,7 @@ import primitives.Color;
  */
 abstract class Light {
     /**
-     * Variable for the color intensity of light source
+     * Variable for the color intensity of a light source
      */
     protected final Color intensity;
 

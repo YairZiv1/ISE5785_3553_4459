@@ -38,7 +38,7 @@ public abstract class Intersectable {
          */
         public Vector normal;
         /**
-         * The scalar product of the direction of the intersecting ray and the normal vectors
+         * The scalar product between the direction of the intersecting ray and the normal vectors
          */
         public double vNormal;
         /**
@@ -84,7 +84,7 @@ public abstract class Intersectable {
      * Function that called from a geometry shape and calculates the intersections with a given ray.
      * This method cannot be overridden
      * @param ray the given ray that we want to calculate the intersections with
-     * @return List of the shape's intersections with ray (Converting the intersection list to a points list)
+     * @return List of the shape's intersections with ray (Converting the intersection list to a point list)
      */
     public final List<Point> findIntersections(Ray ray) {
         var list = calculateIntersections(ray);

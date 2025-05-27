@@ -4,12 +4,11 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
 
 import java.util.List;
 
 /**
- * The Triangle class represents a two-dimensional triangle of Euclidean geometry in  Cartesian
+ * The Triangle class represents a two-dimensional triangle of Euclidean geometry in a Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i
  */
@@ -37,7 +36,8 @@ public class Triangle extends Polygon {
         // Vector that represents the ray's axis
         final Vector rayVector = ray.getVector();
 
-        // vector1, vector2, vector3 can't be the ZERO Vector because it happens only if rayPoint = P1/P2/P3,
+        // vector1, vector2, vector3 can't be the ZERO Vector.
+        // because it happens only if rayPoint = P1/P2/P3,
         // which means the ray begins at the plane and there are no intersections with the plane at all,
         // so we would have exit this method already because of the first condition
         final Vector vector1 = vertices.get(0).subtract(rayPoint);

@@ -40,7 +40,7 @@ class SphereTest {
      */
     @Test
     void testFindIntersections() {
-        // The center point of sphere at (1,0,0)
+        // The center point of a sphere at (1,0,0)
         final Point  p100 = new Point(1, 0, 0);
         // A sphere for test
         final Sphere sphere = new Sphere(p100, 1);
@@ -95,7 +95,7 @@ class SphereTest {
         assertEquals(1, result11.size(), "Wrong number of points");
         assertEquals(exp_gp2, result11, "Ray at sphere and goes inside not through center");
 
-        // TC12: Ray starts at sphere and goes outside (0 points)
+        // TC12: Ray starts at a sphere and goes outside (0 points)
         assertNull(sphere.findIntersections(new Ray(gp2, v310)),
                 "Ray at sphere and goes outside not through center");
 
@@ -106,7 +106,7 @@ class SphereTest {
         assertEquals(2, result21.size(), "Wrong number of points");
         assertEquals(List.of(gp3, gp4), result21, "Ray crosses sphere through center");
 
-        // TC22: Ray starts at sphere and goes inside (1 points)
+        // TC22: Ray starts at a sphere and goes inside (1 point)
         final var result22 = sphere.findIntersections(new Ray(gp3, v310));
         assertNotNull(result22, "Can't be empty list");
         assertEquals(1, result22.size(), "Wrong number of points");
@@ -124,11 +124,11 @@ class SphereTest {
         assertEquals(1, result24.size(), "Wrong number of points");
         assertEquals(exp_gp4, result24, "Ray starts at center of sphere");
 
-        // TC25: Ray starts at sphere and goes outside (0 points)
+        // TC25: Ray starts at a sphere and goes outside (0 points)
         assertNull(sphere.findIntersections(new Ray(gp4, v310)),
                 "Ray at sphere and goes outside through center");
 
-        // TC26: Ray starts after sphere (0 points)
+        // TC26: Ray starts after a sphere (0 points)
         assertNull(sphere.findIntersections(new Ray(new Point(4,1,0), v310)),
                 "Ray starts after sphere and goes through center");
 

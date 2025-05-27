@@ -83,7 +83,7 @@ class CameraIntersectionsIntegrationTest {
         assertNumOfIntersections(10, sphere, 3, 3,
                 "Intersections through not in corners pixels");
 
-        // TC04: Camera inside sphere, every ray intersects the sphere once
+        // TC04: Camera inside a sphere, every ray intersects the sphere once
         sphere = new Sphere(Point.ZERO, 4);
         assertNumOfIntersections(9, sphere, 3, 3,
                 "Camera inside sphere");
@@ -109,7 +109,7 @@ class CameraIntersectionsIntegrationTest {
         assertNumOfIntersections(9, plane, 3, 3,
                 "Plane with high slope");
 
-        // TC03:  Plane with a shallow angle, some rays miss it
+        // TC03: Plane with a shallow angle, some rays miss it
         plane = new Plane(new Point(0, 0, -3), new Vector(0, 3, -1));
         assertNumOfIntersections(6, plane, 3, 3,
                 "Plane with low slope");

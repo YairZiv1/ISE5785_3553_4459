@@ -26,11 +26,11 @@ public class Scene {
      */
     public AmbientLight ambientLight = AmbientLight.NONE;
     /**
-     * List of the light sources of the scene, defaults to empty list, no light sources.
+     * List of the scene light sources, defaults to an empty list, no light sources.
      */
     public List<LightSource> lights =  new LinkedList<>();
     /**
-     * A collection of geometric objects that compose the scene, defaults to none geometries.
+     * A collection of geometric objects that compose the scene defaults to none geometries.
      */
     public Geometries geometries = new Geometries();
 

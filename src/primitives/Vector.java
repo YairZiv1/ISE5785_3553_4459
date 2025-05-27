@@ -1,7 +1,7 @@
 package primitives;
 
 /**
- * Class Vector is the basic class representing a Vector of Euclidean  geometry in Cartesian
+ * Class Vector is the basic class representing a Vector of Euclidean geometry in a Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i
  */
@@ -16,7 +16,7 @@ public class Vector extends Point {
 
     /**
      * Constructs a Vector object with the specified x, y, and z.
-     * A Vector cannot represent the zero vector, and an exception will be thrown
+     * A Vector cannot represent the zero vectors, and an exception will be thrown
      * if all components are zero.
      * @param x the x-component of the vector.
      * @param y the y-component of the vector.
@@ -27,10 +27,10 @@ public class Vector extends Point {
 
     /**
      * Constructs a Vector object using a Double3 object for the coordinates.
-     * The constructor check that the Vector does not represent the zero vector
+     * The constructor checks that the Vector does not represent the zero vector
      * (0, 0, 0) and throws an exception if it does.
      * @param d3 the Double3 object representing the components of the vector.
-     * @throws IllegalArgumentException if the given coordinates represent the zero vector.
+     * @throws IllegalArgumentException if the given coordinates represent the zero vectors.
      */
     public Vector(Double3 d3) {
         super(d3);
@@ -41,7 +41,7 @@ public class Vector extends Point {
     /**
      * Sum two Vectors into a new Vector.
      * @param v vector for addition.
-     * @return result of add.
+     * @return result of adding.
      */
     public Vector add(Vector v) {
         return new Vector(this.coords.add(v.coords));
@@ -49,8 +49,8 @@ public class Vector extends Point {
 
     /**
      * Scale (multiply) triad by a number into a new triad where
-     * each number is multiplied by the number.
-     * @param rhs right hand side operand for scaling.
+     * the number multiplies each number.
+     * @param rhs right-hand-side operand for scaling.
      * @return result of scale.
      */
     public Vector scale(double rhs) {
@@ -69,9 +69,9 @@ public class Vector extends Point {
     }
 
     /**
-     * Calculates the cross product of this vector with another vector.
-     * @param v the vector to calculate the cross product with.
-     * @return a new Vector representing the cross product of this vector and the specified vector.
+     * Calculates the cross-product of this vector with another vector.
+     * @param v the vector to calculate the cross-product with.
+     * @return a new Vector representing the cross-product of this vector and the specified vector.
      */
     public Vector crossProduct(Vector v) {
         return new Vector(coords.d2() * v.coords.d3() - coords.d3() * v.coords.d2()
@@ -97,8 +97,8 @@ public class Vector extends Point {
     }
 
     /**
-     * Normalizes the vector to a unit vector.
-     * same vector but with a length of 1.
+     * Normalize the vector to a unit vector.
+     * Same vector but with a length of 1.
      * @return a new Vector object representing the normalized (unit) vector.
      */
     public Vector normalize() { return new Vector(coords.reduce(this.length())); }

@@ -102,7 +102,7 @@ class PlaneTest {
      */
     @Test
     void testFindIntersections() {
-        // The reference point of plane at (0,0,1)
+        // The reference point of the plane at (0,0,1)
         final Point p001 = new Point(0,0,1);
         // A plane for test
         final Plane plane = new Plane(p001, new Point(-1,0,0), new Point(-1,1,0));
@@ -123,7 +123,7 @@ class PlaneTest {
         final var exp = List.of(p112);
 
         // ============ Equivalence Partitions Tests ==============
-        // TC01: Ray intersects the plane (1 points)
+        // TC01: Ray intersects the plane (1 point)
         final var result01 = plane.findIntersections(new Ray(new Point(1,1,1), v001));
         assertNotNull(result01, "Can't be empty list");
         assertEquals(1, result01.size(), "Wrong number of points");
@@ -139,18 +139,18 @@ class PlaneTest {
         assertNull(plane.findIntersections(new Ray(p112, v101)),
                 "Ray parallel to plane and included in it");
 
-        // TC12: Ray is not included in the plane
+        // TC12: Ray is not included on the plane
         assertNull(plane.findIntersections(new Ray(p113, v101)),
                 "Ray parallel to plane and not included in it");
 
         // **** Group 2: Ray is orthogonal to the plane
-        // TC21: Ray starts before the plane (1 points)
+        // TC21: Ray starts before the plane (1 point)
         final var result21 = plane.findIntersections(new Ray(new Point(2,1,1), vm101));
         assertNotNull(result21, "Can't be empty list");
         assertEquals(1, result21.size(), "Wrong number of points");
         assertEquals(exp, result21, "Ray orthogonal to plane and starts before it");
 
-        // TC22: Ray starts in the plane (0 points)
+        // TC22: Ray starts on the plane (0 points)
         assertNull(plane.findIntersections(new Ray(p112, vm101)),
                 "Ray orthogonal to plane and starts in it");
 

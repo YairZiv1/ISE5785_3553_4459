@@ -4,7 +4,7 @@ import geometries.Intersectable.Intersection;
 import java.util.List;
 
 /**
- * Class Ray is the basic class representing a ray of Euclidean geometry in Cartesian
+ * Class Ray is the basic class representing a ray of Euclidean geometry in a Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i
  */
@@ -40,7 +40,7 @@ public class Ray {
 
     /**
      * Construct a ray with starting point, direction and normal.
-     * This constructor ensures that the reflected and refracted rays -
+     * This constructor ensures that the reflected and refracted rays
      * won't intersect the geometry again (avoid self-intersections).
      * @param p the starting point of the ray
      * @param v the direction vector of the ray
@@ -93,7 +93,7 @@ public class Ray {
     }
 
     /**
-     * Calling to a function that find the closest intersection to the head of the ray.
+     * Calling a function that finds the closest intersection to the head of the ray.
      * When this method calls that function - list of intersections is made, the geometry is null.
      * @param points list of points for check the closest to the head of the ray.
      * @return the closest point to the head of the ray from the list of points, or null if none exist.

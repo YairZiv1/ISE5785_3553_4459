@@ -68,15 +68,15 @@ public class Tube extends RadialGeometry {
         // The dot product of the two directions.
         double productDirections = rayDirection.dotProduct(axisDirection);
 
-        // In case the head of the ray is the same as head of the tube's axis:
+        // In case the head of the ray is the same as the head of the tube's axis:
         if (rayHead.equals(tubeHead)) {
-            // In case the direction of the ray orthogonal to the direction of the tube's axis:
+            // In case, the direction of the ray orthogonal to the direction of the tube's axis:
             // calculate the intersection directly using the radius (of course, checking the max distance).
             if (Util.isZero(productDirections))
                 return Util.alignZero(radius - maxDistance) < 0 ?
                         List.of(new Intersection(this, ray.getPoint(radius))) : null;
 
-            // in case the direction of the ray parallel to the direction of the tube's axis:
+            // in case the direction of the ray parallel to the direction of the tube's axis,
             // there are 0 intersections.
             if (rayDirection.equals(axisDirection.scale(productDirections)))
                 return null;

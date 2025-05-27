@@ -42,7 +42,7 @@ public class PointLight extends Light implements LightSource {
         // calculates the distance squared so that we won't calculate its root and then square it back
         double distanceSquared = position.distanceSquared(p);
         // reduce is for integers only
-        // in java, (n / d) in  floats, returns infinity when d equals to zero, so no check needed
+        // in java, (n / d) in floats, returns infinity when d equals to zero, so no check needed
         return intensity.scale(1 / (kC + kL * Math.sqrt(distanceSquared) + kQ * distanceSquared));
     }
 

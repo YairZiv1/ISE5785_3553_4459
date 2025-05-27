@@ -25,7 +25,7 @@ class ReflectionRefractionTest {
     private final Camera.Builder cameraBuilder = Camera.getBuilder()     //
             .setRayTracer(scene, RayTracerType.SIMPLE);
 
-    /** Produce a picture of a sphere lighted by a spot light */
+    /** Produce a picture of a sphere lighted by a spotlight */
     @Test
     void twoSpheres() {
         scene.geometries.add( //
@@ -47,7 +47,7 @@ class ReflectionRefractionTest {
                 .writeToImage("refractionTwoSpheres");
     }
 
-    /** Produce a picture of a sphere lighted by a spot light */
+    /** Produce a picture of a sphere lighted by a spotlight */
     @Test
     void twoSpheresOnMirrors() {
         scene.geometries.add( //
@@ -79,7 +79,7 @@ class ReflectionRefractionTest {
     }
 
     /**
-     * Produce a picture of a two triangles lighted by a spot light with a
+     * Produce a picture of two triangles lighted by a spotlight with a
      * partially
      * transparent Sphere producing partial shadow
      */
@@ -106,25 +106,5 @@ class ReflectionRefractionTest {
                 .build() //
                 .renderImage() //
                 .writeToImage("refractionShadow");
-    }
-
-    /**
-     * Generating image with all the effects.
-     */
-    @Test
-    void allEffects() {
-        scene.geometries.add(new Sphere(new Point(0,3,0), 30).setEmission(new Color(BLUE))
-                .setMaterial(new Material().setKD(0.4).setKS(0.5).setShininess(200).setKT(0.3)));
-
-
-
-        cameraBuilder
-                .setLocation(new Point(0, 0, 1000)) //
-                .setDirection(Point.ZERO, Vector.AXIS_Y) //
-                .setVpDistance(1000).setVpSize(150, 150) //
-                .setResolution(500, 500) //
-                .build() //
-                .renderImage() //
-                .writeToImage("zzz");
     }
 }

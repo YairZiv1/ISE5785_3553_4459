@@ -111,11 +111,11 @@ class RenderTest {
                 .writeToImage("color render test 2");
     }
 
-    /** Test for XML based scene - for bonus */
+    /** Test for XML-based scene - for bonus */
     @Test
     void basicRenderXml() {
         Scene scene = new Scene("Using XML");
-        // enter XML file name and parse from XML file into scene object instead of the
+        // enter XML file name and parse from an XML file into a scene object instead of the
         // new Scene above,
         // Use the code you added in appropriate packages
         // ...
@@ -130,11 +130,11 @@ class RenderTest {
                 .writeToImage("xml render test");
     }
 
-    /** Test for JSON based scene - for bonus */
+    /** Test for JSON-based scene - for bonus */
     @Test
     void basicRenderJson() {
         Scene scene = new Scene("Using Json");
-        // enter XML file name and parse from JSON file into scene object instead of the
+        // enter XML file name and parse from JSON file into a scene object instead of the
         // new Scene above,
         // Use the code you added in appropriate packages
         // ...

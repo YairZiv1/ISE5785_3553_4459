@@ -1,7 +1,6 @@
 package geometries;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static primitives.Util.*;
@@ -24,12 +23,12 @@ public class Polygon extends Geometry {
      */
     protected final Plane plane;
     /**
-     * The size of the polygon - the amount of the vertices in the polygon
+     * The size of the polygon - the number of the vertices in the polygon
      */
     private final int size;
 
     /**
-     * Polygon constructor based on vertices list. The list must be ordered by edge
+     * Polygon constructor based on a vertices list. The list must be ordered by edge
      * path. The polygon must be convex.
      *
      * @param vertices list of vertices according to their order by
@@ -68,12 +67,12 @@ public class Polygon extends Geometry {
         Vector edge1 = vertices[size - 1].subtract(vertices[size - 2]);
         Vector edge2 = vertices[0].subtract(vertices[size - 1]);
 
-        // Cross Product of any subsequent edges will throw an IllegalArgumentException
+        // Cross-Product of any subsequent edges will throw an IllegalArgumentException
         // because of Zero Vector if they connect three vertices that lay in the same
         // line.
         // Generate the direction of the polygon according to the angle between last and
-        // first edge being less than 180deg. It is hold by the sign of its dot product
-        // with the normal. If all the rest consequent edges will generate the same sign
+        // first edge being less than 180deg. It is held by the sign of its dot product
+        // with the normal. If all the rest consequent edges generate the same sign
         // - the polygon is convex ("kamur" in Hebrew).
         boolean positive = edge1.crossProduct(edge2).dotProduct(n) > 0;
         for (var i = 1; i < size; ++i) {

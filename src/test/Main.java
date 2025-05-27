@@ -33,7 +33,7 @@ public final class Main {
     private static final Vector V4          = new Vector(1, 2, 2);
 
     /**
-     * Main program to tests initial functionality of the 1st stage
+     * Main program to test initial functionality of the 1st stage
      * @param args irrelevant here
      */
     public static void main(String[] args) {
@@ -98,7 +98,7 @@ public final class Main {
         if (!isZero(V4.length() - 3))
             out.println("ERROR: length() wrong value");
 
-        // test vector normalization vs vector length and cross-product
+        // test vector normalization vs. vector length and cross-product
         Vector v = new Vector(1, 2, 3);
         Vector u = v.normalize();
         if (!isZero(u.length() - 1))
@@ -115,7 +115,7 @@ public final class Main {
      * Method for testing operations on two vectors
      */
     private static void vectorDoubleOperationTests() {
-        // Test add & subtract
+        // Test add and subtract
         try {
             V1.add(V1_OPPOSITE);
             out.println("ERROR: Vector + -itself does not throw an exception");

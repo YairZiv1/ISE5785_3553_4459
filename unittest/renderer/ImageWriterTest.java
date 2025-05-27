@@ -2,10 +2,8 @@ package renderer;
 
 import org.junit.jupiter.api.Test;
 import primitives.Color;
-import primitives.Point;
 
 import static java.awt.Color.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing ImageWriter Class
@@ -29,12 +27,12 @@ class ImageWriterTest {
             for (int j = 0; j < imageWriter.nY(); j++)
                 imageWriter.writePixel(i, j, new Color(YELLOW));
 
-        // Loop that go through the rows and set the grid color
+        // Loop that goes through the rows and set the grid color
         for (int i = 0; i < imageWriter.nX(); i++)
             for (int j = 0; j < imageWriter.nY(); j+=50)
                 imageWriter.writePixel(i, j, new Color(RED));
 
-        // Loop that go through the columns and set the grid color
+        // Loop that goes through the columns and set the grid color
         for (int i = 0; i < imageWriter.nX(); i+=50)
             for (int j = 0; j < imageWriter.nY(); j++)
                 imageWriter.writePixel(i, j, new Color(RED));

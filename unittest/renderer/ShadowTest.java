@@ -60,7 +60,7 @@ class ShadowTest {
                            new Point(-100, -100, 200));
    }
 
-   /** Sphere-Triangle shading - move triangle up-right */
+   /** Sphere-Triangle shading - move triangle upright */
    @Test
    void sphereTriangleMove1() {
       sphereTriangleHelper("shadowSphereTriangleMove2", //
@@ -84,7 +84,7 @@ class ShadowTest {
               new Point(-87, -87, 116));
    }
 
-   /** Sphere-Triangle shading - move spot even more close */
+   /** Sphere-Triangle shading - move spot even more closes */
    @Test
    void sphereTriangleSpot2() {
       sphereTriangleHelper("shadowSphereTriangleSpot2", //
@@ -93,7 +93,7 @@ class ShadowTest {
    }
 
    /**
-    * Produce a picture of a two triangles lighted by a spot light with a Sphere
+    * Produce a picture of two triangles lighted by a spotlight with a Sphere
     * producing a shading
     */
    @Test

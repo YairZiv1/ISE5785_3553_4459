@@ -9,7 +9,7 @@ import static primitives.Util.isZero;
 import java.util.List;
 
 /**
- * The Sphere class represents a 3D geometrical body of Euclidean geometry in Cartesian
+ * The Sphere class represents a 3D geometrical body of Euclidean geometry in a Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i
  */

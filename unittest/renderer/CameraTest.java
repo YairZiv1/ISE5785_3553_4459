@@ -18,7 +18,7 @@ class CameraTest {
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
             .setLocation(Point.ZERO)
             .setVpDistance(10);
-    /** Assert failure message for a bad ray */
+    /** Assert a failure message for a bad ray */
     private static final String  BAD_RAY       = "Bad ray";
 
     /**
@@ -71,7 +71,7 @@ class CameraTest {
         cameraBuilder.setVpSize(4, 4).setResolution(2, 2);
 
         // ============ Equivalence Partitions Tests ==============
-        // EP01: set to a target point without up vector
+        // EP01: set to a target point without an up vector
         Point  target1    = new Point(10, -10, 0);
         Camera camera1    = cameraBuilder.setDirection(target1).build();
         Point  center1    = target1.subtract(Point.ZERO).normalize().scale(10);

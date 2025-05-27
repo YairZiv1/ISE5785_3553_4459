@@ -32,8 +32,8 @@ final class ImageWriter {
    // ***************** Constructors ********************** //
    /**
     * Image Writer constructor accepting image name and View Plane parameters,
-    * @param nX amount of pixels by Width
-    * @param nY amount of pixels by height
+    * @param nX number of pixels by Width
+    * @param nY number of pixels by height
     */
    ImageWriter(int nX, int nY) {
       this.nX = nX;
@@ -45,20 +45,20 @@ final class ImageWriter {
    // ***************** Getters ********************** //
    /**
     * View Plane Y axis resolution
-    * @return the amount of vertical pixels
+    * @return the number of vertical pixels
     */
    int nY() { return nY; }
 
    /**
     * View Plane X axis resolution
-    * @return the amount of horizontal pixels
+    * @return the number of horizontal pixels
     */
    int nX() { return nX; }
 
    // ***************** Operations ******************** //
 
    /**
-    * Function writeToImage produces unoptimized png file of the image according
+    * Function writeToImage produces an unoptimized png file of the image according
     * to pixel color matrix in the directory of the project
     * @param imageName the name of png file
     */

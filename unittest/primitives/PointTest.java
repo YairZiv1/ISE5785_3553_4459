@@ -29,7 +29,7 @@ class PointTest {
                 "ERROR: Point - Point does not work correctly");
 
         // =============== Boundary Values Tests ==================
-        // TC11: If we subtract the  same point (p - p) we will get vector 0.
+        // TC11: If we subtract the same point (p - p) we will get vector 0.
         final Point P0 = new Point(8,-1,3);
         assertThrows(IllegalArgumentException.class, () -> P0.subtract(P0),
                 "ERROR: Point - Point does not work correctly");

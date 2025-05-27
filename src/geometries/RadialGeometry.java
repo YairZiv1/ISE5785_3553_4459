@@ -2,7 +2,7 @@ package geometries;
 
 /**
  * Class RadialGeometry is the basic abstract class representing a geometric shapes that have a radius
- * of Euclidean geometry in Cartesian
+ * of Euclidean geometry in a Cartesian
  * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i.
  */

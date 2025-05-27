@@ -76,11 +76,11 @@ public class Camera implements Cloneable {
 
     /**
      * Calculates the ray from camera through a specific pixel with a given resolution
-     * @param nX the number of columns of pixels.
-     * @param nY the number of rows of pixels.
+     * @param nX the number pixels columns.
+     * @param nY the number pixels rows.
      * @param j the pixel's column number
      * @param i the pixel's row number.
-     * @return the ray from camera to the middle of the pixel
+     * @return the ray from the camera to the middle of the pixel
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
         // Calculate the center point of the view plane
@@ -137,7 +137,7 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * Function writeToImage produces unoptimized png file of the image according
+     * Function writeToImage produces an unoptimized png file of the image according
      * to pixel color matrix in the directory of the project, using delegation.
      * @param imageName the name of png file
      * @return A camera
@@ -215,7 +215,7 @@ public class Camera implements Cloneable {
 
         /**
          * In case the target point is exactly "above" the camera (the camera direction will be with the Y axis),
-         * an exception should be thrown because the cross product result will be the zero vector.
+         * an exception should be thrown because the cross-product result will be the zero vectors.
          * @param targetPoint the camera's target point (what point the photographer is aiming at)
          * @return A camera
          */
@@ -304,10 +304,6 @@ public class Camera implements Cloneable {
                     !isZero(camera.vUp.length() - 1) ||
                     !isZero(camera.vRight.length() - 1))
                 throw new IllegalArgumentException("vTo, vUp, vRight must be normalized");
-
-            double x = camera.vTo.dotProduct(camera.vUp);
-            double y = camera.vTo.dotProduct(camera.vRight);
-            double z = camera.vUp.dotProduct(camera.vUp);
 
             if (!isZero(camera.vTo.dotProduct(camera.vUp)) ||
                     !isZero(camera.vTo.dotProduct(camera.vRight)) ||

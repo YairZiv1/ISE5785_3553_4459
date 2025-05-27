@@ -29,8 +29,8 @@ public class Plane extends Geometry {
 
     /**
      * Constructs a Plane object using three points in 3D space.
-     * The three points define the direction and position of the plane.
-     * and calculates the normal
+     * The three points define the direction and position of the plane,
+     * and calculate the normal
      * @param p1 the first point on the plane.
      * @param p2 the second point on the plane.
      * @param p3 the third point on the plane

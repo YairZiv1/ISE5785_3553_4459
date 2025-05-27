@@ -2,7 +2,6 @@ package primitives;
 
 import org.junit.jupiter.api.Test;
 
-import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -35,11 +34,11 @@ class VectorTest {
 
         // =============== Boundary Values Tests ==================
 
-        // TC10: If the given coordinates represent the zero vector (3 doubles).
+        // TC10: If the given coordinates represent the zero vectors (3 doubles).
         assertThrows(IllegalArgumentException.class, () -> new Vector(0, 0, 0),
                 "ERROR: Vector can not be the zero vector");
 
-        // TC11: If the given coordinates represent the zero vector. (Double3)
+        // TC11: If the given coordinates represent the zero vectors. (Double3)
         assertThrows(IllegalArgumentException.class, () -> new Vector(Double3.ZERO),
                 "ERROR: Vector can not be the zero vector");
     }
@@ -49,7 +48,7 @@ class VectorTest {
      */
     @Test
     void testSubtract() {
-        /** A vector for tests to (1,2,3) */
+        // A vector for tests to (1,2,3)
         final Vector V1 = new Vector(1, 2, 3);
 
         // ============ Equivalence Partitions Tests ==============
@@ -68,7 +67,7 @@ class VectorTest {
      */
     @Test
     void testAdd() {
-        /** A vector for tests to (1,2,3) */
+        // A vector for tests to (1,2,3)
         final Vector V1 = new Vector(1, 2, 3);
 
         // ============ Equivalence Partitions Tests ==============
@@ -87,7 +86,7 @@ class VectorTest {
      */
     @Test
     void testScale() {
-        /** A vector for tests to (1,-2,3) */
+        // A vector for tests to (1,-2,3)
         final Vector V1 = new Vector(1, -2, 3);
 
         // ============ Equivalence Partitions Tests ==============
@@ -110,7 +109,7 @@ class VectorTest {
      */
     @Test
     void testDotProduct() {
-        /** A vector for tests to (1,2,3) */
+        // A vector for tests to (1,2,3)
         final Vector V1 = new Vector(1, 2, 3);
 
         // ============ Equivalence Partitions Tests ==============
@@ -149,7 +148,7 @@ class VectorTest {
      */
     @Test
     void testCrossProduct() {
-        /** A vector for tests to (1,2,3) */
+        // A vector for tests to (1,2,3)
         final Vector V1 = new Vector(1, 2, 3);
 
         // ============ Equivalence Partitions Tests ==============

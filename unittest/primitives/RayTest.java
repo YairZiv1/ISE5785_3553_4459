@@ -70,7 +70,7 @@ class RayTest {
         assertEquals(p112, ray.findClosestPoint(Arrays.asList(p112, p116, p114)),
                 "ERROR: Didn't return the closest point when it's the first in list");
 
-        // TC13: The closest point is in the end of the list
+        // TC13: The closest point is at the end of the list
         assertEquals(p112, ray.findClosestPoint(Arrays.asList(p113, p115, p112)),
                 "ERROR: Didn't return the closest point when it's the last in list");
     }

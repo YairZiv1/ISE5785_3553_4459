@@ -43,8 +43,8 @@ public class Circle extends RadialGeometry {
     public List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
         List<Intersection> intersections = plane.calculateIntersections(ray, maxDistance);
 
-        // If there are no intersection with the plane - of course that in the circle there are no intersection.
-        // But if there are intersection - check if the intersection is on the circle.
+        // If there is no intersection with the plane - of course that in the circle there are no intersection.
+        // But if there is an intersection - check if the intersection is on the circle.
         if (intersections != null && Util.alignZero(center.distance(intersections.getFirst().point) - radius) < 0)
             return List.of(new Intersection(this, intersections.getFirst().point));
         return null;
