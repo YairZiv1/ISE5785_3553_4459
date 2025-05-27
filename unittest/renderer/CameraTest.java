@@ -11,6 +11,9 @@ import primitives.*;
  * @author Dan
  */
 class CameraTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    CameraTest() { /* to satisfy JavaDoc generator */ }
+
     /** Camera builder for the tests */
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
             .setLocation(Point.ZERO)

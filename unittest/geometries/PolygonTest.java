@@ -13,6 +13,9 @@ import java.util.List;
  * @author Dan.
  */
 class PolygonTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    PolygonTest() { /* to satisfy JavaDoc generator */ }
+
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
      * assertEquals.

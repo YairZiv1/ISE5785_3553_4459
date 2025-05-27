@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yair Ziv and Amitay Yosh'i
  */
 class TubeTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    TubeTest() { /* to satisfy JavaDoc generator */ }
 
     /**
      * Test method for {@link Tube#getNormal(Point)}.

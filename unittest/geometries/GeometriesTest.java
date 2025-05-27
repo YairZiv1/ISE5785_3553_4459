@@ -12,6 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yair Ziv and Amitay Yosh'i
  */
 class GeometriesTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    GeometriesTest() { /* to satisfy JavaDoc generator */ }
+
     /**
      * * Test method for {@link Geometries#findIntersections(Ray)}.
      */

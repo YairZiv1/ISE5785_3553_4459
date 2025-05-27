@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yair Ziv and Amitay Yosh'i
  */
 class CylinderTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    CylinderTest() { /* to satisfy JavaDoc generator */ }
 
     /**
      * Test method for {@link Cylinder#getNormal(Point)}.

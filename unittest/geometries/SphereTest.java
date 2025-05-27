@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yair Ziv and Amitay Yosh'i
  */
 class SphereTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    SphereTest() { /* to satisfy JavaDoc generator */ }
+
     /**
      * Test method for {@link Sphere#getNormal(Point)}.
      */

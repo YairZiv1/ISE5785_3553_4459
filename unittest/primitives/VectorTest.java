@@ -10,6 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yair Ziv and Amitay Yosh'i
  */
 class VectorTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    VectorTest() { /* to satisfy JavaDoc generator */ }
+
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
      * assertEquals

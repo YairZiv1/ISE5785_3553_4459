@@ -17,6 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Yair Ziv and Amitay Yosh'i
  */
 class CameraIntersectionsIntegrationTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    CameraIntersectionsIntegrationTest() { /* to satisfy JavaDoc generator */ }
+
     /**
      * Camera for the tests
      */

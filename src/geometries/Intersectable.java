@@ -10,6 +10,9 @@ import java.util.List;
  * @author Yair Ziv and Amitay Yosh'i.
  */
 public abstract class Intersectable {
+    /** Default constructor to satisfy JavaDoc generator */
+    Intersectable() { /* to satisfy JavaDoc generator */ }
+
     /**
      * The Intersection class is to associate intersection points with intersecting geometries.
      */

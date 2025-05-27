@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yair Ziv and Amitay Yosh'i.
  */
 class ImageWriterTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    ImageWriterTest() { /* to satisfy JavaDoc generator */ }
 
     /**
      * Test method for {@link ImageWriter#writeToImage(String)}.

@@ -10,6 +10,9 @@ import primitives.*;
  * @author Yair Ziv and Amitay Yosh'i.
  */
 public abstract class Geometry extends Intersectable {
+    /** Default constructor to satisfy JavaDoc generator */
+    Geometry() { /* to satisfy JavaDoc generator */ }
+
     /**
      * The shining color
      */

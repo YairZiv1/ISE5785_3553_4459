@@ -162,6 +162,9 @@ public class Camera implements Cloneable {
      * Class for building the camera
      */
     public static class Builder {
+        /** Default constructor to satisfy JavaDoc generator */
+        Builder() { /* to satisfy JavaDoc generator */ }
+
         /**
          * Camera object
          */

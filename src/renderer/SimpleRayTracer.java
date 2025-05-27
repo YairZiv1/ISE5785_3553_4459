@@ -199,6 +199,7 @@ public class SimpleRayTracer extends RayTracerBase {
      * This includes the object's emission and contributions from all light sources
      * that affect the point (diffuse and specular reflections).
      * @param intersection the intersection point between a ray and a geometry
+     * @param k for ensuring the minimum calculation of the color
      * @return the resulting color from local light effects at the intersection
      */
     private Color calcColorLocalEffects(Intersection intersection, Double3 k) {

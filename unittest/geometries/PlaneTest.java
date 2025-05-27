@@ -13,6 +13,9 @@ import java.util.List;
  * @author Yair Ziv and Amitay Yosh'i
  */
 class PlaneTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    PlaneTest() { /* to satisfy JavaDoc generator */ }
+
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
      * assertEquals
