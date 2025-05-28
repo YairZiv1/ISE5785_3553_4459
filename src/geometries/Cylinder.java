@@ -65,7 +65,7 @@ public class Cylinder extends Tube {
         if (Util.isZero(t))
             return rayVector.scale(-1);
         // In case, the given Point is on the upper base.
-        else if (t == height)
+        else if (Util.isZero(t - height))
             return rayVector;
         // In case, the Point is on the side - use super.
         else
@@ -74,12 +74,12 @@ public class Cylinder extends Tube {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
-        Point baseCenter = ray.getPoint(0);
+        Point baseCenter = this.ray.getPoint(0);
         List<Intersection> intersections = null;
         var list = super.calculateIntersectionsHelper(ray, maxDistance);
         if (list != null)
             for (Intersection intersection : list) {
-                double distance = Util.alignZero(intersection.point.subtract(baseCenter).dotProduct(ray.getVector()));
+                double distance = Util.alignZero(intersection.point.subtract(baseCenter).dotProduct(this.ray.getVector()));
                 if (distance > 0 && Util.alignZero(distance - height) < 0) {
                     if (intersections == null)
                         intersections = new LinkedList<>();

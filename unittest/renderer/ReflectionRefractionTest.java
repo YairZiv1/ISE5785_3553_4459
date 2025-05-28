@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import geometries.*;
 import lighting.*;
 import primitives.*;
-import scene.Scene;
+import sceneTest.Scene;
 
 /**
  * Tests for reflection and transparency functionality, test for partial
@@ -99,8 +99,8 @@ class ReflectionRefractionTest {
                         .setKl(4E-5).setKq(2E-7));
 
         cameraBuilder
-                .setLocation(new Point(0, 0, 1000)) //
-                .setDirection(Point.ZERO, Vector.AXIS_Y) //
+                .setLocation(new Point(0, -1000, 550)) //
+                .setDirection(Point.ZERO, Vector.AXIS_Z) //
                 .setVpDistance(1000).setVpSize(200, 200) //
                 .setResolution(600, 600) //
                 .build() //

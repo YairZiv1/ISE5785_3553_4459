@@ -57,14 +57,20 @@ public class Ray {
 
     /**
      * Get function for the point that represents the ray.
+     * Note: when {@param t} and the vector (v) is very small (but not zero), and they are scaled together
+     * the result is the zero vector.
+     * Therefore, we are catching the exception in that case.
      * @param t for getting a point on the Ray (not just the head point)
      * @return p the starting point of the ray or p scaled.
      */
     public Point getPoint(double t) {
         if (Util.isZero(t))
             return p;
-        else
+        try {
             return p.add(v.scale(t));
+        } catch (IllegalArgumentException e) {
+            return p;
+        }
     }
 
     /**

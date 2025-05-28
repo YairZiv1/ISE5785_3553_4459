@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import geometries.*;
 import lighting.*;
 import primitives.*;
-import scene.Scene;
+import sceneTest.Scene;
 
 /**
  * Testing basic shadows

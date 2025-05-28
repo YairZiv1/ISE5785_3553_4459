@@ -58,12 +58,12 @@ public class Tube extends RadialGeometry {
         // The head of the intersecting ray.
         Point rayHead = ray.getPoint(0);
         // The head of the ray that represents the tube.
-        Point tubeHead = ray.getPoint(0);
+        Point tubeHead = this.ray.getPoint(0);
 
         // The direction of the intersecting ray.
         Vector rayDirection = ray.getVector();
         // The direction of the ray that represents the tube.
-        Vector axisDirection = ray.getVector();
+        Vector axisDirection = this.ray.getVector();
 
         // The dot product of the two directions.
         double productDirections = rayDirection.dotProduct(axisDirection);
