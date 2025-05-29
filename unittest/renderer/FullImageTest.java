@@ -11,6 +11,7 @@ import geometries.*;
 import primitives.*;
 import sceneTest.Scene;
 
+import static java.awt.Color.BLUE;
 import static java.awt.Color.YELLOW;
 
 public class FullImageTest {
@@ -25,27 +26,23 @@ public class FullImageTest {
 
     @Test
     void allEffects() {
+        // stars
         Random rand = new Random();
-        int numStars = 250; // 250
-        double starMinZ = -200;
-        double starMaxZ = 120;
+        int numStars = 250;
+        Color starEmission = new Color(200 , 200 , 200);
+        Material starMaterial = new Material().setKD(0.5).setKT(1).setShininess(200);
 
         for (int i = 0; i < numStars; i++) {
-            double x = rand.nextDouble() * 500 - 250;
-            double y = rand.nextDouble() * 400 + 100;
-            double z = rand.nextDouble() * (starMaxZ - starMinZ) + starMinZ;
+            double x = rand.nextDouble() * 500 - 250;   // between -250 and 250
+            double y = rand.nextDouble() * 400 + 100;   // between 100 and 500
+            double z = rand.nextDouble() * 320 - 200;   // between -200 and 120
 
-            double radius = rand.nextDouble() * 1.3 + 0.3;
-
-            Color starColor = new Color(
-                    200 + rand.nextInt(56),
-                    200 + rand.nextInt(56),
-                    200 + rand.nextInt(56));
+            double radius = rand.nextDouble() * 1.3 + 0.3;  // between 0.3 and 1.6
 
             sceneTest.geometries.add(
                     new Sphere(new Point(x, y, z), radius)
-                            .setEmission(starColor)
-                            .setMaterial(new Material().setKD(0.5).setShininess(200))
+                            .setEmission(starEmission)
+                            .setMaterial(starMaterial)
             );
         }
 
@@ -74,13 +71,15 @@ public class FullImageTest {
         Geometry alienPupil = new Sphere(new Point(0,95,64), 1)
                 .setEmission(new Color(20, 20, 20)).setMaterial(new Material().setKD(0.2).setKS(0.9).setShininess(300));
 
-        sceneTest.geometries.add(alienHead, alienBody, alienRightLeg, alienLeftLeg, alienRightHand, alienLeftHand, alienRightFeeler, alienLeftFeeler, alienEye, alienPupil);
-
         // ufo dome
         Point ufoDomeCenter = new Point(0,100,50);
         double ufoDomeRadius = 20;
         Color ufoDomeEmission = new Color(30, 30, 70);
         Material ufoDomeMaterial = new Material().setKD(0.1).setKS(0.7).setShininess(300).setKT(0.8).setKR(0.2);
+
+        Geometry ufoDome = new Sphere(ufoDomeCenter, ufoDomeRadius)
+                .setEmission(ufoDomeEmission)
+                .setMaterial(ufoDomeMaterial);
 
         // ufo cylinder
         Ray ufoCylinderRay = new Ray(new Point(0,100,44), Vector.AXIS_Z);
@@ -88,6 +87,10 @@ public class FullImageTest {
         double ufoCylinderHeight = 3;
         Color ufoCylinderEmission = new Color(192, 90, 0);
         Material ufoCylinderMaterial = new Material().setKD(0.7).setKS(0.3).setShininess(100);
+
+        Geometry ufoCylinder = new Cylinder(ufoCylinderRadius, ufoCylinderRay, ufoCylinderHeight)
+                .setEmission(ufoCylinderEmission)
+                .setMaterial(ufoCylinderMaterial);
 
         // ufo disk (skirt)
         double topRadiusDisk = 18;
@@ -101,53 +104,6 @@ public class FullImageTest {
         Material ufoDiskMaterial = new Material().setKD(0.7).setKS(0.2).setShininess(80);
         Point[] topCircleDots = new Point[numberOfDots];
         Point[] bottomCircleDots = new Point[numberOfDots];
-
-        // circles on the ufo's dome
-        Color circleColor = new Color(90,90,90);
-        Vector circleNormal = Vector.AXIS_Z;
-        Material circleMaterial = new Material().setKD(0.5);
-
-        // glow spheres
-        int numGlowSpheres = 16;
-        double glowSphereRadius = 3;
-        double glowSphereCircleRadius = 48;
-        double zGlowSphere = 25;
-        Color glowSphereEmission = new Color(255, 255, 150);
-        Material glowSphereMaterial= new Material().setKD(0.1).setKS(0.5).setShininess(300);
-
-        // ufo laser
-        double laserRadius = 10;
-        Ray laserRay = new Ray(new Point(0, 100, 28), new Vector(0, 0, -1));
-        double laserHeight = 70;
-        Color laserEmission = new Color(70, 70, 0);
-        Material laserMaterial = new Material().setKT(1).setKD(0.1).setShininess(100);
-
-        // ufo dome
-        Geometry ufoDome = new Sphere(ufoDomeCenter, ufoDomeRadius)
-                .setEmission(ufoDomeEmission)
-                .setMaterial(ufoDomeMaterial);
-
-        // ufo cylinder
-        Geometry ufoCylinder = new Cylinder(ufoCylinderRadius, ufoCylinderRay, ufoCylinderHeight)
-                .setEmission(ufoCylinderEmission)
-                .setMaterial(ufoCylinderMaterial);
-
-        // circles on the ufo's dome
-        Geometry circle1 = new Circle(new Point(0,100,40), 28, circleNormal)
-                .setEmission(circleColor)
-                .setMaterial(circleMaterial);
-        Geometry circle2 = new Circle(new Point(0,100,36), 36, circleNormal)
-                .setEmission(circleColor)
-                .setMaterial(circleMaterial);
-        Geometry circle3 = new Circle(new Point(0,100,32), 45, circleNormal)
-                .setEmission(circleColor)
-                .setMaterial(circleMaterial);
-
-        // ufo laser
-        Geometry laser = new Cylinder(laserRadius, laserRay,laserHeight)
-                .setEmission(laserEmission)
-                .setMaterial(laserMaterial);
-
         // dots for creating the ufo's disk (skirt)
         for (int i = 0; i < numberOfDots; i++) {
             double angle = i * (2 * Math.PI / numberOfDots);
@@ -162,8 +118,7 @@ public class FullImageTest {
             topCircleDots[i] = new Point(xTop, yTop, heightTopDisk);
             bottomCircleDots[i] = new Point(xBottom, yBottom, heightBottomDisk);
         }
-
-        // ufo disk (skirt)
+        // creating ufo disk (skirt)
         for (int dot = 0; dot < numberOfDots; dot++) {
             int nextDot = (dot + 1) % numberOfDots;
             sceneTest.geometries.add(
@@ -173,10 +128,33 @@ public class FullImageTest {
                             topCircleDots[nextDot],
                             topCircleDots[dot])
                             .setEmission(ufoDiskEmission)
-                            .setMaterial(ufoDiskMaterial));
+                            .setMaterial(ufoDiskMaterial)
+            );
         }
 
+        // circles on the ufo's dome
+        Color circleColor = new Color(90,90,90);
+        Vector circleNormal = Vector.AXIS_Z;
+        Material circleMaterial = new Material().setKD(0.5);
+
+        Geometry circle1 = new Circle(new Point(0,100,40), 28, circleNormal)
+                .setEmission(circleColor)
+                .setMaterial(circleMaterial);
+        Geometry circle2 = new Circle(new Point(0,100,36), 36, circleNormal)
+                .setEmission(circleColor)
+                .setMaterial(circleMaterial);
+        Geometry circle3 = new Circle(new Point(0,100,32), 45, circleNormal)
+                .setEmission(circleColor)
+                .setMaterial(circleMaterial);
+
         // glow spheres
+        int numGlowSpheres = 16;
+        double glowSphereRadius = 3;
+        double glowSphereCircleRadius = 48;
+        double zGlowSphere = 25;
+        Color glowSphereEmission = new Color(255, 255, 150);
+        Material glowSphereMaterial= new Material().setKD(0.1).setKS(0.5).setShininess(300);
+
         for (int i = 0; i < numGlowSpheres; i++) {
             double angle = i * (2 * Math.PI / numGlowSpheres);
             double xGlowSphere = glowSphereCircleRadius * Math.cos(angle);
@@ -189,12 +167,33 @@ public class FullImageTest {
             );
         }
 
-        Geometry moon = new Sphere(new Point(0,100,-250), 220)
-                .setEmission(new Color(90, 90, 90))
-                .setMaterial(new Material().setKD(0.7).setKS(0.1).setKR(0.1).setShininess(10));
+        // ufo laser
+        double laserRadius = 10;
+        Ray laserRay = new Ray(new Point(0, 100, 28), new Vector(0, 0, -1));
+        double laserHeight = 70;
+        Color laserEmission = new Color(70, 70, 0);
+        Material laserMaterial = new Material().setKT(1).setKD(0.1).setShininess(100);
 
-        // laser
-        sceneTest.geometries.add(ufoDome, ufoCylinder, circle1, circle2, circle3, moon, laser);
+        Geometry laser = new Cylinder(laserRadius, laserRay,laserHeight)
+                .setEmission(laserEmission)
+                .setMaterial(laserMaterial);
+
+        // moon
+        Point moonCenter = new Point(0,100,-250);
+        double moonRadius = 220;
+        Color moonEmission = new Color(90, 90, 90);
+        Material moonMaterial = new Material().setKD(0.7).setKS(0.1).setKR(0.1).setShininess(10);
+
+        Geometry moon = new Sphere(moonCenter, moonRadius)
+                .setEmission(moonEmission)
+                .setMaterial(moonMaterial);
+
+        // adding ufo and moon
+        sceneTest.geometries.add(ufoDome, ufoCylinder, circle1, circle2, circle3, laser, moon);
+        // adding alien
+        sceneTest.geometries.add(alienHead, alienBody, alienRightLeg, alienLeftLeg, alienRightHand, alienLeftHand,
+                alienRightFeeler, alienLeftFeeler, alienEye, alienPupil
+        );
 
         sceneTest.lights.add(new SpotLight(
                 new Color(700, 600, 200), new Point(0,100,28), Vector.AXIS_Z.scale(-1))
@@ -203,9 +202,8 @@ public class FullImageTest {
                 .setNarrowBeam(25)
         );
         sceneTest.lights.add(new DirectionalLight(new Color(100,100,100), new Vector(-8,-10,-10)));
-        sceneTest.lights.add(new DirectionalLight(new Color(50,50,50), new Vector(0,1,-1)));
-        sceneTest.setAmbientLight(new AmbientLight(new Color(26, 26, 26))
-        );
+        sceneTest.lights.add(new DirectionalLight(new Color(70,70,70), new Vector(0,1,-1)));
+        sceneTest.setAmbientLight(new AmbientLight(new Color(26, 26, 26)));
 
         cameraBuilder
                 .setLocation(new Point(0, -2000, 600)) //
@@ -214,7 +212,7 @@ public class FullImageTest {
                 .setResolution(700, 700) //
                 .build() //
                 .renderImage() //
-                .writeToImage("zzz");
+                .writeToImage("UFO in space");
     }
 }
 
