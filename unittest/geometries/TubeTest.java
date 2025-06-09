@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

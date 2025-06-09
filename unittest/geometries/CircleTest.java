@@ -14,6 +14,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yair Ziv and Amitay Yosh'i
  */
 class CircleTest {
+    /** Default constructor to satisfy JavaDoc generator */
+    CircleTest() { /* to satisfy JavaDoc generator */ }
+
+    /**
+     * Delta value for accuracy when comparing the numbers of type 'double' in
+     * assertEquals
+     */
     private static final double DELTA = 0.000001;
 
     /**

@@ -10,6 +10,13 @@ import geometries.*;
 import primitives.*;
 import sceneTest.Scene;
 
+/**
+ * Testing FullImageTest
+ * This test creates a scene with various geometries and lights to demonstrate the rendering capabilities of the
+ * ray tracer.
+ * The scene includes stars, an alien, a UFO, a moon, and various lighting effects.
+ * @author Yair Ziv and Amitay Yosh'i
+ */
 public class FullImageTest {
     /** Default constructor to satisfy JavaDoc generator */
     FullImageTest() { /* to satisfy JavaDoc generator */ }
@@ -20,6 +27,9 @@ public class FullImageTest {
     Camera.Builder cameraBuilder = Camera.getBuilder()     //
             .setRayTracer(sceneTest, RayTracerType.SIMPLE);
 
+    /**
+     * Test method for testing the rendering of a complex scene with various geometries and lighting effects.
+     */
     @Test
     void allEffects() {
         // stars
