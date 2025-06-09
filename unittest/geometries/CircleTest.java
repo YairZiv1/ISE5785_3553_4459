@@ -15,68 +15,108 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class CircleTest {
     private static final double DELTA = 0.000001;
-    final Circle circle = new Circle(new Point(0, 0, 1), 1, new Vector(0, 0, 1));
 
     /**
      * Test method for {@link Circle#getNormal(Point)}
      */
     @Test
     void getNormal() {
-        Point p1 = new Point(0, 0, 1);
-        Point p2 = new Point(1, 0, 1);
-        Point p3 = new Point(0, 1, 1);
+        // A point for tests at (0, 0, 1)
+        final Point p001 = new Point(0, 0, 1);
+        // A point for tests at (1, 0, 1)
+        final Point p101 = new Point(1, 0, 1);
+        // A point for tests at (0, 1, 1)
+        final Point p011 = new Point(0, 1, 1);
 
-        Vector v1 = p1.subtract(p2);
-        Vector v2 = p3.subtract(p2);
+        // Vectors for tests
+        final Vector v1 = p001.subtract(p101);
+        final Vector v2 = p011.subtract(p101);
 
-        Vector normal = circle.getNormal(p1);
 
         // ============ Equivalence Partitions Tests ==============
-        // TC1: Checking the normal vector for correctness
+        // TC01: Test that compares the triangle's normal to the expected result.
+        // A circle for test
+        final Circle circle = new Circle(1, p001, new Vector(0, 0, 1));
+        // A vector for the circle's normal
+        final Vector normal = circle.getNormal(p001);
+
+        // ensure there are no exceptions
+        assertDoesNotThrow(() -> circle.getNormal(p101), "");
         assertEquals(0, v1.dotProduct(normal), DELTA,
-                "Normal vector isn't orthogonal to plane vectors");
+                "ERROR: The normal isn't orthogonal to one of the plane's vectors");
         assertEquals(0, v2.dotProduct(normal), DELTA,
-                "Normal vector isn't orthogonal to plane vectors");
+                "ERROR: The normal isn't orthogonal to one of the plane's vectors");
         assertEquals(1, normal.length(), DELTA,
-                "Normal vector isn't normalized");
+                "ERROR: The normal isn't normalized");
     }
 
     /**
-     * Test method for {@link Circle#calculateIntersectionsHelper(Ray ray, double maxDistance)}
+     * Test method for {@link Circle#findIntersections(Ray)}.
+     */
+    @Test
+    void testFindIntersections() {
+        // A point for tests at (0, 0, 1)
+        final Point p001 = new Point(0, 0, 1);
+        // A point for the ray head
+        Point rayHead = new Point(0, 0, 2);
+
+        // A vector used in some test cases to (0,0,1)
+        final Vector v001 = new Vector(0,0,1);
+
+        // A circle for tests
+        final Circle circle = new Circle(1, p001, v001);
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray is inside the circle (1 point)
+        final var result01 = circle.findIntersections(new Ray(rayHead, new Vector(0.5, 0.5, -1)));
+        assertNotNull(result01, "Can't be empty list");
+        assertEquals(1, result01.size(), "Wrong number of points");
+        assertEquals(List.of(new Point(0.5,0.5,1)), result01, "Ray inside circle");
+
+        // TC02: Ray is outside the circle (0 points)
+        assertNull(circle.findIntersections(new Ray(rayHead, new Vector(-0.5, -0.5, 1))),
+                "Ray outside triangle against edge");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: Ray is on the edge of the circle
+        assertNull(circle.findIntersections(new Ray(rayHead, new Vector(1, 0, -1))),
+                "Ray on edge");
+
+        // TC12: Ray is in the center of the circle
+        final var result12 = circle.findIntersections(new Ray(rayHead, new Vector(0, 0, -1)));
+        assertNotNull(result12, "Can't be empty list");
+        assertEquals(1, result12.size(), "Wrong number of points");
+        assertEquals(List.of(new Point(0,0,1)), result12, "Ray in circle's center");
+    }
+
+    /**
+     * Test method for {@link Circle#calculateIntersectionsHelper(Ray, double)}
      */
     @Test
     void calculateIntersectionsHelper() {
-
-        Point rayHead = new Point(0, 0, 2);
+        // A circle for tests
+        final Circle circle = new Circle(2, new Point(0,1,0), Vector.AXIS_X);
 
         // ============ Equivalence Partitions Tests ==============
-        // TC01: Ray intersects the circle
-        Ray ray = new Ray(rayHead, new Vector(0.5, 0.5, -1));
-        List<Point> result = circle.findIntersections(ray);
-        assertNotNull(result, "Intersections array should not be null");
-        assertEquals(1, result.size(), "Wrong number of intersections");
-        Point intersectionPoint = new Point(0.5,0.5,1);
-        var exp = List.of(intersectionPoint);
-        assertEquals(exp, result, "Wrong intersection point");
+        // TC01: Ray "stops" before the circle
+        assertNull(circle.calculateIntersections(new Ray(new Point(-3, 0, 0), Vector.AXIS_X), 2),
+                "ray stops before the circle");
 
-        // TC02: Ray doesn't intersect the circle
-        ray = new Ray(rayHead, new Vector(-0.5, -0.5, 1));
-        result = circle.findIntersections(ray);
-        assertNull(result, "Intersections array should be null");
+        // TC02: Ray crosses the circle
+        final var result02 = circle.calculateIntersections(
+                new Ray(new Point(-1, 0, 0), Vector.AXIS_X), 2);
+        assertNotNull(result02, "Can't be empty list");
+        assertEquals(1, result02.size(), "Wrong number of points");
+
+        // TC03: Ray starts after the circle
+        assertNull(circle.calculateIntersections(new Ray(new Point(1, 0, 0), Vector.AXIS_X), 2),
+                "ray starts after the circle");
 
         // =============== Boundary Values Tests ==================
-        // TC11: Ray intersects the center of the circle
-        ray = new Ray(rayHead, new Vector(0, 0, -1));
-        result = circle.findIntersections(ray);
-        assertNotNull(result, "Intersections array should not be null");
-        assertEquals(1, result.size(), "Wrong number of intersections");
-        intersectionPoint = new Point(0,0,1);
-        exp = List.of(intersectionPoint);
-        assertEquals(exp, result, "Wrong intersection point");
-
-        // Test Case 12 - Ray intersects the circle's edge
-        ray = new Ray(rayHead, new Vector(1, 0, -1));
-        result = circle.findIntersections(ray);
-        assertNull(result, "Intersections' array should be null");
+        // TC11: Ray "stops" at the circle
+        final var result11 = circle.calculateIntersections(
+                new Ray(new Point(-2, 0, 0), Vector.AXIS_X), 2);
+        assertNotNull(result11, "Can't be empty list");
+        assertEquals(1, result11.size(), "Wrong number of points");
     }
 }

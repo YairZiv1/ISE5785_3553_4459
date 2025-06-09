@@ -18,12 +18,10 @@ public class Cylinder extends Tube {
      * Represents the height of the cylinder.
      */
     private final double height;
-
     /**
      * The bottom base of the cylinder, represented as a circle.
      */
     private final Circle bottomBase;
-
     /**
      * The top base of the cylinder, represented as a circle.
      */
@@ -41,11 +39,11 @@ public class Cylinder extends Tube {
 
         // Calculates the bottom circle of the cylinder
         Point bottomCenter = ray.getPoint(0);
-        bottomBase = new Circle(bottomCenter, radius, getNormal(bottomCenter));
+        bottomBase = new Circle(radius, bottomCenter, getNormal(bottomCenter));
 
         // Calculates the top circle of the cylinder
-        Point topCenter = bottomCenter.add(ray.getVector().scale(height));
-        topBase = new Circle(topCenter, radius, getNormal(topCenter));
+        Point topCenter = ray.getPoint(height);
+        topBase = new Circle(radius, topCenter, getNormal(topCenter));
     }
 
     @Override

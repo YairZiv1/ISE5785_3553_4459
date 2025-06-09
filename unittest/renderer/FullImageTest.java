@@ -2,7 +2,6 @@ package renderer;
 
 import lighting.AmbientLight;
 import lighting.DirectionalLight;
-import lighting.PointLight;
 import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
 import java.util.Random;
@@ -10,9 +9,6 @@ import java.util.Random;
 import geometries.*;
 import primitives.*;
 import sceneTest.Scene;
-
-import static java.awt.Color.BLUE;
-import static java.awt.Color.YELLOW;
 
 public class FullImageTest {
     /** Default constructor to satisfy JavaDoc generator */
@@ -28,8 +24,8 @@ public class FullImageTest {
     void allEffects() {
         // stars
         Random rand = new Random();
-        int numStars = 250;
-        Color starEmission = new Color(200 , 200 , 200);
+        int numStars = 350;
+        Color starEmission = new Color( 200 , 200 , 200);
         Material starMaterial = new Material().setKD(0.5).setKT(1).setShininess(200);
 
         for (int i = 0; i < numStars; i++) {
@@ -37,7 +33,8 @@ public class FullImageTest {
             double y = rand.nextDouble() * 400 + 100;   // between 100 and 500
             double z = rand.nextDouble() * 320 - 200;   // between -200 and 120
 
-            double radius = rand.nextDouble() * 1.3 + 0.3;  // between 0.3 and 1.6
+            double radius = rand.nextDouble() * 0.6 + 0.3; // between 0.3 and 0.9
+            radius += Math.pow(rand.nextDouble(), 11) * 1; // just a few that are very big
 
             sceneTest.geometries.add(
                     new Sphere(new Point(x, y, z), radius)
@@ -62,9 +59,9 @@ public class FullImageTest {
                 .setEmission(alienEmission).setMaterial(alienMaterial);
         Geometry alienLeftHand = new Cylinder(1, new Ray(new Point(0,100,54), new Vector(-1,0,1)), 8)
                 .setEmission(alienEmission).setMaterial(alienMaterial);
-        Geometry alienRightFeeler = new Cylinder(1, new Ray(new Point(1,100,65), new Vector(1,0,2.5)), 6)
+        Geometry alienRightFeeler = new Cylinder(1, new Ray(new Point(1,100,65), new Vector(1,0,2.5)), 5)
                 .setEmission(alienEmission).setMaterial(alienMaterial);
-        Geometry alienLeftFeeler = new Cylinder(1, new Ray(new Point(-1,100,65), new Vector(-1,0,2.5)), 6)
+        Geometry alienLeftFeeler = new Cylinder(1, new Ray(new Point(-1,100,65), new Vector(-1,0,2.5)), 5)
                 .setEmission(alienEmission).setMaterial(alienMaterial);
         Geometry alienEye = new Sphere(new Point(0,98,63.5), 2.8)
                 .setEmission(new Color(230, 230, 230)).setMaterial(new Material().setKD(0.5).setKS(0.7).setShininess(150));
@@ -137,13 +134,13 @@ public class FullImageTest {
         Vector circleNormal = Vector.AXIS_Z;
         Material circleMaterial = new Material().setKD(0.5);
 
-        Geometry circle1 = new Circle(new Point(0,100,40), 28, circleNormal)
+        Geometry circle1 = new Circle(28, new Point(0,100,40), circleNormal)
                 .setEmission(circleColor)
                 .setMaterial(circleMaterial);
-        Geometry circle2 = new Circle(new Point(0,100,36), 36, circleNormal)
+        Geometry circle2 = new Circle(36, new Point(0,100,36), circleNormal)
                 .setEmission(circleColor)
                 .setMaterial(circleMaterial);
-        Geometry circle3 = new Circle(new Point(0,100,32), 45, circleNormal)
+        Geometry circle3 = new Circle(45, new Point(0,100,32), circleNormal)
                 .setEmission(circleColor)
                 .setMaterial(circleMaterial);
 
@@ -151,7 +148,7 @@ public class FullImageTest {
         int numGlowSpheres = 16;
         double glowSphereRadius = 3;
         double glowSphereCircleRadius = 48;
-        double zGlowSphere = 25;
+        double zGlowSphere = 26;
         Color glowSphereEmission = new Color(255, 255, 150);
         Material glowSphereMaterial= new Material().setKD(0.1).setKS(0.5).setShininess(300);
 
@@ -215,14 +212,3 @@ public class FullImageTest {
                 .writeToImage("UFO in space");
     }
 }
-
-/**
- * cameraBuilder
- *                 .setLocation(new Point(0, -2000, 600)) //
- *                 .setDirection(new Point(0,0,0), Vector.AXIS_Y) //
- *                 .setVpDistance(1000).setVpSize(200, 200) //
- *                 .setResolution(700, 700) //
- *                 .build() //
- *                 .renderImage() //
- *                 .writeToImage("zzz");
- */

@@ -21,7 +21,6 @@ public class Tube extends RadialGeometry {
 
     /**
      * Constructs a Tube object with a specified radius and central axis ray.
-     *
      * @param radius the radius of the tube; must be a positive value.
      * @param ray    the central axis of the tube, represented as a Ray object.
      */
@@ -73,7 +72,7 @@ public class Tube extends RadialGeometry {
             // In case, the direction of the ray orthogonal to the direction of the tube's axis:
             // calculate the intersection directly using the radius (of course, checking the max distance).
             if (Util.isZero(productDirections))
-                return Util.alignZero(radius - maxDistance) < 0 ?
+                return Util.alignZero(radius - maxDistance) <= 0 ?
                         List.of(new Intersection(this, ray.getPoint(radius))) : null;
 
             // in case the direction of the ray parallel to the direction of the tube's axis,
@@ -83,7 +82,7 @@ public class Tube extends RadialGeometry {
 
             // The distance between the head's and the intersection.
             double t = radius / rayDirection.subtract(axisDirection.scale(productDirections)).length();
-            return Util.alignZero(t - maxDistance) < 0 ?
+            return Util.alignZero(t - maxDistance) <= 0 ?
                     List.of(new Intersection(this, ray.getPoint(t))) : null;
         }
 
@@ -100,7 +99,7 @@ public class Tube extends RadialGeometry {
         if (Util.isZero(a)) {
             if (Util.isZero(b))
                 return null;
-            return Util.alignZero(-c / b - maxDistance) < 0 ? List.of(new Intersection(this, ray.getPoint(-c / b))) : null;
+            return Util.alignZero(-c / b - maxDistance) <= 0 ? List.of(new Intersection(this, ray.getPoint(-c / b))) : null;
         }
 
         // The discriminant
@@ -118,14 +117,14 @@ public class Tube extends RadialGeometry {
 
         List<Intersection> intersections = null;
 
-        if (t1 > 0 && Util.alignZero(t1 - maxDistance) < 0) {
+        if (t1 > 0 && Util.alignZero(t1 - maxDistance) <= 0) {
             Point point = ray.getPoint(t1);
             if (!point.equals(rayHead)) {
                 intersections = new LinkedList<>();
                 intersections.add(new Intersection(this, point));
             }
         }
-        if (t2 > 0 && Util.alignZero(t2 - maxDistance) < 0) {
+        if (t2 > 0 && Util.alignZero(t2 - maxDistance) <= 0) {
             Point point = ray.getPoint(t2);
             if (!point.equals(rayHead)) {
                 if (intersections == null)

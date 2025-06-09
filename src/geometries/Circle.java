@@ -14,23 +14,21 @@ import java.util.List;
  */
 public class Circle extends RadialGeometry {
     /**
-     * The center point of the circle
+     * Represents the center point of the circle
      */
     private final Point center;
-
     /**
-     * The circle lay's in this plane.
+     * Associated plane in which the circle lays.
      */
     protected final Plane plane;
 
-
     /**
      * Constructor to create a circle.
-     * @param center the center point of the circle
-     * @param radius the radius of the circle
-     * @param normal the normal to the circle's plane
+     * @param radius the radius of the circle.
+     * @param center the center point of the circle.
+     * @param normal the normal to the circle's plane.
      */
-    public Circle(Point center, double radius, Vector normal) {
+    public Circle(double radius, Point center, Vector normal) {
         super(radius);
         this.center = center;
         this.plane = new Plane(center, normal);
@@ -41,12 +39,15 @@ public class Circle extends RadialGeometry {
 
     @Override
     public List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
-        List<Intersection> intersections = plane.calculateIntersections(ray, maxDistance);
+        // test the intersections with circle’s plane
+        // we prefer to use the helper method so that we already check the distance
+        final var intersections = plane.calculateIntersections(ray, maxDistance);
+        if (intersections == null)
+            return null;
 
-        // If there is no intersection with the plane - of course that in the circle there are no intersection.
-        // But if there is an intersection - check if the intersection is on the circle.
-        if (intersections != null && Util.alignZero(center.distance(intersections.getFirst().point) - radius) < 0)
+        if (Util.alignZero(center.distance(intersections.getFirst().point) - radius) < 0)
             return List.of(new Intersection(this, intersections.getFirst().point));
+
         return null;
     }
 }

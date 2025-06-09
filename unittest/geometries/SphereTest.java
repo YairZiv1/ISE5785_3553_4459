@@ -202,12 +202,12 @@ class SphereTest {
         assertNotNull(result11, "Can't be empty list");
         assertEquals(1, result11.size(), "Wrong number of points");
 
-        // TC11: Ray starts before the sphere and "stops" at the second intersection point
+        // TC12: Ray starts before the sphere and "stops" at the second intersection point
         final var result12 = sphere.calculateIntersections(new Ray(new Point(-4, 0, 0), v100), 7);
         assertNotNull(result12, "Can't be empty list");
         assertEquals(2, result12.size(), "Wrong number of points");
 
-        // TC11: Ray starts inside the sphere and "stops" at the intersection point
+        // TC13: Ray starts inside the sphere and "stops" at the intersection point
         final var result13 = sphere.calculateIntersections(new Ray(new Point(-2, 0, 0), v100), 5);
         assertNotNull(result13, "Can't be empty list");
         assertEquals(1, result13.size(), "Wrong number of points");
