@@ -3,6 +3,7 @@ package renderer;
 import primitives.*;
 import sceneTest.Scene;
 
+import java.util.List;
 import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
@@ -61,6 +62,23 @@ public class Camera implements Cloneable {
     private int nY = 1;
 
     /**
+     * The number of rays to be cast for each pixel in the image for antialiasing effect
+     */
+    private int multipleRays = 1;
+    /**
+     * The size of the aperture for depth of field (DoF) effect
+     */
+    private double apertureSize = 0;
+    /**
+     * The focal distance for depth of field (DoF) effect
+     */
+    private double focalDistance = 1;
+    /**
+     * The number of rays to be cast for each pixel in the image for depth of field (DoF) effect
+     */
+    private int multipleRaysForDoF = 1;
+
+    /**
      * Camera empty constructor
      */
     private Camera() {}
@@ -75,12 +93,12 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * Calculates the ray from camera through a specific pixel with a given resolution
-     * @param nX the number pixels columns.
-     * @param nY the number pixels rows.
+     * Calculates the ray from camera through a specific pixel with a given resolution.
+     * @param nX the number pixels columns
+     * @param nY the number pixels rows
      * @param j the pixel's column number
-     * @param i the pixel's row number.
-     * @return the ray from the camera to the middle of the pixel
+     * @param i the pixel's row number
+     * @return a ray that starts at the camera and goes through the pixel (i, j)
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
         // Calculate the center point of the view plane
@@ -114,9 +132,9 @@ public class Camera implements Cloneable {
      * @return A camera
      */
     public Camera renderImage() {
-        for(int i=0; i < nX; i++)
-            for(int j=0; j < nY; j++)
-                castRay(i,j);
+        for (int i = 0; i < nX; i++)
+            for (int j = 0; j < nY; j++)
+                castRay(i, j);
         return this;
     }
 
@@ -148,14 +166,64 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * This method colors a pixel.
+     * This method colors a pixel by casting a ray or rays through it.
      * @param i the pixel's row number
      * @param j the pixel's column number
      */
-    private void castRay(int i,  int j) {
-        Ray ray = constructRay(nX, nY, j, i);
-        Color color = rayTracer.traceRay(ray);
-        this.imageWriter.writePixel(j, i, color);
+    private void castRay(int i, int j) {
+        Color color;
+        if (multipleRays > 1) // If multiple rays are used, cast a beam of rays
+            color = castRayAntiAliasing(i, j);
+        else if (apertureSize > 0 && multipleRaysForDoF > 1) // If the depth of field is used...
+            color = castRayDepthOfField(constructRay(nX, nY, j, i));
+        else // If no antialiasing and no depth of field, use a single ray
+            color = rayTracer.traceRay(constructRay(nX, nY, j, i));
+
+        imageWriter.writePixel(j, i, color);
+    }
+
+    /**
+     * This method creates a beam of rays through a pixel and returns the averaged color.
+     * @param i the pixel's row index
+     * @param j the pixel's column index
+     * @return the average color from all rays in the beam
+     */
+    private Color castRayAntiAliasing(int i, int j) {
+        Ray centralRay = constructRay(nX, nY, j, i);
+        Point targetPoint = centralRay.getPoint(distance);
+        double areaSize = width / nX;
+
+        List<Point> samplePoints = new BlackBoard(centralRay, targetPoint, areaSize, multipleRays).getSamplePoints();
+
+        Color totalColor = Color.BLACK;
+        for (Point samplePoint : samplePoints) {
+            Ray sampleRay = new Ray(p0, samplePoint.subtract(p0));
+            if (apertureSize > 0 && multipleRaysForDoF > 1) // If the depth of field is used...
+                totalColor = totalColor.add(castRayDepthOfField(sampleRay));
+            else // If no depth of field, use a single ray
+                totalColor = totalColor.add(rayTracer.traceRay(sampleRay));
+        }
+
+        return totalColor.reduce(samplePoints.size());
+    }
+
+    /**
+     * This method colors a pixel using depth of field (DoF) effect.
+     * @param ray the ray that goes through the pixel
+     * @return the average color from all rays in the aperture
+     */
+    private Color castRayDepthOfField(Ray ray) {
+        Point focalPoint = ray.getPoint(focalDistance);
+
+        List<Point> aperturePoints = new BlackBoard(ray, p0, apertureSize, multipleRaysForDoF).getSamplePoints();
+        Color totalColor = Color.BLACK;
+
+        for (Point origin : aperturePoints) {
+            Ray originRay = new Ray(origin, focalPoint.subtract(origin));
+            totalColor = totalColor.add(rayTracer.traceRay(originRay));
+        }
+
+        return totalColor.reduce(aperturePoints.size());
     }
 
     /**
@@ -260,6 +328,42 @@ public class Camera implements Cloneable {
         public Builder setResolution(int nX, int nY) {
             camera.nX = nX;
             camera.nY = nY;
+            return this;
+        }
+
+        /**
+         * Set the number of rays to be cast for each pixel in the image.
+         * If not square number, the number of rays will be considered as the nearest square number below.
+         * @param multipleRays the number of rays to be cast for each pixel
+         * @return A camera
+         */
+        public Builder setRayBeam(int multipleRays) {
+            if (multipleRays < 1)
+                throw new IllegalArgumentException("multiple rays must be positive");
+
+            camera.multipleRays = multipleRays;
+            return this;
+        }
+
+        /**
+         * Set the aperture size, focal distance, and number of rays for depth of field (DoF) effect.
+         * If not square number, the number of rays will be considered as the nearest square number below.
+         * @param apertureSize the size of the aperture
+         * @param focalDistance the distance at which the camera is focused
+         * @param multipleRaysForDoF the number of rays to be cast for each pixel in the image for DoF effect
+         * @return A camera
+         */
+        public Builder setAperture(double apertureSize, double focalDistance, int multipleRaysForDoF) {
+            if (alignZero(apertureSize) < 0)
+                throw new IllegalArgumentException("aperture size must be non-negative");
+            if (alignZero(focalDistance) <= 0)
+                throw new IllegalArgumentException("focal distance must be positive");
+            if (multipleRaysForDoF < 1)
+                throw new IllegalArgumentException("multiple rays for DoF must be positive");
+
+            camera.apertureSize = apertureSize;
+            camera.focalDistance = focalDistance;
+            camera.multipleRaysForDoF = multipleRaysForDoF;
             return this;
         }
 

@@ -214,7 +214,7 @@ public class FullImageTest {
 
         cameraBuilder
                 .setLocation(new Point(0, -2000, 600)) //
-                .setDirection(new Point(0,0,0), Vector.AXIS_Y) //
+                .setDirection(Point.ZERO, Vector.AXIS_Y) //
                 .setVpDistance(1000).setVpSize(200, 200) //
                 .setResolution(700, 700) //
                 .build() //
