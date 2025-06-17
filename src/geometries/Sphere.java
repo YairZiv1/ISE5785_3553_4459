@@ -30,6 +30,13 @@ public class Sphere extends RadialGeometry {
     }
 
     @Override
+    public Geometry move(Vector offset) {
+        return new Sphere(center.add(offset), radius)
+                .setEmission(this.getEmission())
+                .setMaterial(this.getMaterial());
+    }
+
+    @Override
     public Vector getNormal(Point p) {
         return p.subtract(center).normalize();
     }

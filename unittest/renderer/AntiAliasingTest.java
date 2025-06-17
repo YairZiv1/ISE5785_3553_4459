@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import geometries.*;
 import primitives.*;
-import sceneTest.Scene;
+import scene.Scene;
 
 /**
  * Testing depth of field in rendering
@@ -83,6 +83,12 @@ public class AntiAliasingTest {
                 new Vector(0, -1, 0))
                 .setKl(0.001).setKq(0.0001));
 
+        scene.lights.add(new SpotLight(
+                new Color(400, 100, 100),
+                new Point(10, 70, -400),
+                new Vector(0, -1, 0))
+                .setKl(0.001).setKq(0.0001));
+
         camera //
                 .build()
                 .renderImage()
@@ -116,8 +122,15 @@ public class AntiAliasingTest {
                 new Vector(0, -1, 0))
                 .setKl(0.001).setKq(0.0001));
 
+        scene.lights.add(new SpotLight(
+                new Color(400, 100, 100),
+                new Point(10, 70, -400),
+                new Vector(0, -1, 0))
+                .setKl(0.001).setKq(0.0001));
+
         camera //
-                .setRayBeam(81)
+                .setAntiAliasingResolution(9)
+                .setMultithreading(-2)
                 .build()
                 .renderImage()
                 .writeToImage("With AntiAliasing spheres");

@@ -35,6 +35,13 @@ public class Circle extends RadialGeometry {
     }
 
     @Override
+    public Geometry move(Vector offset) {
+        return new Circle(radius, center.add(offset), this.getNormal(this.center))
+                .setEmission(this.getEmission())
+                .setMaterial(this.getMaterial());
+    }
+
+    @Override
     public Vector getNormal(Point point) { return plane.getNormal(point); }
 
     @Override

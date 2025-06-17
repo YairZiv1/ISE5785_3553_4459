@@ -2,7 +2,7 @@ package renderer;
 
 import primitives.Ray;
 import primitives.Color;
-import sceneTest.Scene;
+import scene.Scene;
 
 /**
  * RayTracerBase class is an abstract class for ray tracing renderers.

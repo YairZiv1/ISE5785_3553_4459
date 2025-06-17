@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import geometries.*;
 import lighting.*;
 import primitives.*;
-import sceneTest.Scene;
+import scene.Scene;
 
 /**
  * Tests for reflection and transparency functionality, test for partial

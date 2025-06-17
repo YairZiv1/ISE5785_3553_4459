@@ -1,10 +1,12 @@
 package renderer;
 
 import primitives.*;
-import sceneTest.Scene;
+import scene.Scene;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.stream.*;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -62,9 +64,9 @@ public class Camera implements Cloneable {
     private int nY = 1;
 
     /**
-     * The number of rays to be cast for each pixel in the image for antialiasing effect
+     * The number of rays to be cast for each side of a pixel in the image for antialiasing effect
      */
-    private int multipleRays = 1;
+    private int raysPerSideAA = 1;
     /**
      * The size of the aperture for depth of field (DoF) effect
      */
@@ -74,9 +76,30 @@ public class Camera implements Cloneable {
      */
     private double focalDistance = 1;
     /**
-     * The number of rays to be cast for each pixel in the image for depth of field (DoF) effect
+     * The number of rays to be cast for each side of the aperture for depth of field (DoF) effect
      */
-    private int multipleRaysForDoF = 1;
+    private int raysPerSideDoF = 1;
+
+    /** Number of threads to use fore rendering image by the camera */
+    private int              threadsCount     = 0;
+    /**
+     * Number of threads to spare for Java VM threads:<br>
+     * Spare threads if trying to use all the cores
+     */
+    private static final int SPARE_THREADS    = 2;
+    /**
+     * Debug print interval in seconds (for progress percentage)<br>
+     * if it is zero, there is no progress output
+     */
+    private double           printInterval    = 0;
+    /**
+     * Pixel manager for supporting:
+     * <ul>
+     * <li>multi-threading</li>
+     * <li>debug print of progress percentage in Console window/tab</li>
+     * </ul>
+     */
+    private PixelManager pixelManager;
 
     /**
      * Camera empty constructor
@@ -85,7 +108,6 @@ public class Camera implements Cloneable {
 
     /**
      * Builder getter
-     *
      * @return the camera builder
      */
     public static Builder getBuilder() {
@@ -127,14 +149,56 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * The method will go through all the pixels according to the resolution,
-     * and perform ray tracing to color all the pixels of the image.
-     * @return A camera
+     * This function renders image's pixel color map from the scene
+     * included in the ray tracer object
+     * @return the camera object itself
      */
     public Camera renderImage() {
+        pixelManager = new PixelManager(nY, nX, printInterval);
+        return switch (threadsCount) {
+            case 0 -> renderImageNoThreads();
+            case-1 -> renderImageStream();
+            default-> renderImageRawThreads();
+        };
+    }
+
+    /**
+     * Render image without multi-threading
+     * @return the camera object itself
+     */
+    private Camera renderImageNoThreads() {
         for (int i = 0; i < nX; i++)
             for (int j = 0; j < nY; j++)
                 castRay(i, j);
+        return this;
+    }
+
+    /**
+     * Render image using multi-threading by creating and running raw threads
+     * @return the camera object itself
+     */
+    private Camera renderImageRawThreads() {
+        var threads = new LinkedList<Thread>();
+        while (threadsCount-- > 0)
+            threads.add(new Thread(() -> {
+                PixelManager.Pixel pixel;
+                while ((pixel = pixelManager.nextPixel()) != null)
+                    castRay(pixel.col(), pixel.row());
+            }));
+        for (var thread : threads) thread.start();
+        try {
+            for (var thread : threads) thread.join();
+        } catch (InterruptedException ignore) {}
+        return this;
+    }
+    /**
+     * Render image using multi-threading by creating and running raw threads
+     * @return the camera object itself
+     */
+    private Camera renderImageStream() {
+        IntStream.range(0, nY).parallel() //
+                .forEach(i-> IntStream.range(0, nX).parallel() //
+                        .forEach(j-> castRay(j, i)));
         return this;
     }
 
@@ -166,20 +230,21 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * This method colors a pixel by casting a ray or rays through it.
+     * This method colors a pixel by casting a ray or many rays through it.
      * @param i the pixel's row number
      * @param j the pixel's column number
      */
     private void castRay(int i, int j) {
         Color color;
-        if (multipleRays > 1) // If multiple rays are used, cast a beam of rays
+        if (raysPerSideAA > 1) // If multiple rays are used, cast a beam of rays
             color = castRayAntiAliasing(i, j);
-        else if (apertureSize > 0 && multipleRaysForDoF > 1) // If the depth of field is used...
+        else if (apertureSize > 0 && raysPerSideDoF > 1) // If the depth of field is used...
             color = castRayDepthOfField(constructRay(nX, nY, j, i));
         else // If no antialiasing and no depth of field, use a single ray
             color = rayTracer.traceRay(constructRay(nX, nY, j, i));
 
         imageWriter.writePixel(j, i, color);
+        pixelManager.pixelDone();
     }
 
     /**
@@ -193,12 +258,12 @@ public class Camera implements Cloneable {
         Point targetPoint = centralRay.getPoint(distance);
         double areaSize = width / nX;
 
-        List<Point> samplePoints = new BlackBoard(centralRay, targetPoint, areaSize, multipleRays).getSamplePoints();
+        List<Point> samplePoints = new BlackBoard(centralRay, targetPoint, areaSize, raysPerSideAA).getSamplePoints();
 
         Color totalColor = Color.BLACK;
         for (Point samplePoint : samplePoints) {
             Ray sampleRay = new Ray(p0, samplePoint.subtract(p0));
-            if (apertureSize > 0 && multipleRaysForDoF > 1) // If the depth of field is used...
+            if (apertureSize > 0 && raysPerSideDoF > 1) // If the depth of field is used...
                 totalColor = totalColor.add(castRayDepthOfField(sampleRay));
             else // If no depth of field, use a single ray
                 totalColor = totalColor.add(rayTracer.traceRay(sampleRay));
@@ -215,7 +280,7 @@ public class Camera implements Cloneable {
     private Color castRayDepthOfField(Ray ray) {
         Point focalPoint = ray.getPoint(focalDistance);
 
-        List<Point> aperturePoints = new BlackBoard(ray, p0, apertureSize, multipleRaysForDoF).getSamplePoints();
+        List<Point> aperturePoints = new BlackBoard(ray, p0, apertureSize, raysPerSideDoF).getSamplePoints();
         Color totalColor = Color.BLACK;
 
         for (Point origin : aperturePoints) {
@@ -332,38 +397,84 @@ public class Camera implements Cloneable {
         }
 
         /**
-         * Set the number of rays to be cast for each pixel in the image.
-         * If not square number, the number of rays will be considered as the nearest square number below.
-         * @param multipleRays the number of rays to be cast for each pixel
+         * For now, set rayTracer if the type is simple, otherwise set rayTracer to null
+         * @param scene the scene that will be rendered using this ray tracer
+         * @param rayTracerType the type of the rayTracer
          * @return A camera
          */
-        public Builder setRayBeam(int multipleRays) {
-            if (multipleRays < 1)
+        public Builder setRayTracer(Scene scene, RayTracerType rayTracerType) {
+            if (rayTracerType == RayTracerType.SIMPLE)
+                camera.rayTracer = new SimpleRayTracer(scene);
+            else
+                camera.rayTracer = null;
+            return this;
+        }
+
+        /**
+         * Set the number of rays to be cast for each side of a pixel in the image.
+         * @param raysPerSide the number of rays to be cast for each side of a pixel
+         * @return A camera
+         */
+        public Builder setAntiAliasingResolution(int raysPerSide) {
+            if (raysPerSide < 1)
                 throw new IllegalArgumentException("multiple rays must be positive");
 
-            camera.multipleRays = multipleRays;
+            camera.raysPerSideAA = raysPerSide;
             return this;
         }
 
         /**
          * Set the aperture size, focal distance, and number of rays for depth of field (DoF) effect.
-         * If not square number, the number of rays will be considered as the nearest square number below.
          * @param apertureSize the size of the aperture
          * @param focalDistance the distance at which the camera is focused
-         * @param multipleRaysForDoF the number of rays to be cast for each pixel in the image for DoF effect
+         * @param raysPerSide the number of rays to be cast for each side of the aperture
          * @return A camera
          */
-        public Builder setAperture(double apertureSize, double focalDistance, int multipleRaysForDoF) {
+        public Builder setAperture(double apertureSize, double focalDistance, int raysPerSide) {
             if (alignZero(apertureSize) < 0)
                 throw new IllegalArgumentException("aperture size must be non-negative");
             if (alignZero(focalDistance) <= 0)
                 throw new IllegalArgumentException("focal distance must be positive");
-            if (multipleRaysForDoF < 1)
+            if (raysPerSide < 1)
                 throw new IllegalArgumentException("multiple rays for DoF must be positive");
 
             camera.apertureSize = apertureSize;
             camera.focalDistance = focalDistance;
-            camera.multipleRaysForDoF = multipleRaysForDoF;
+            camera.raysPerSideDoF = raysPerSide;
+            return this;
+        }
+
+        /**
+         * Set multi-threading <br>
+         * Parameter value meaning:
+         * <ul>
+         * <li>-2 - number of threads is number of logical processors less 2</li>
+         * <li>-1 - stream processing parallelization (implicit multi-threading) is used</li>
+         * <li>0 - multi-threading is not activated</li>
+         * <li>1 and more - literally number of threads</li>
+         * </ul>
+         * @param  threads number of threads
+         * @return         builder object itself
+         */
+        public Builder setMultithreading(int threads) {
+            if (threads < -3)
+                throw new IllegalArgumentException("Multithreading parameter must be -2 or higher");
+            if (threads == -2) {
+                int cores = Runtime.getRuntime().availableProcessors() - SPARE_THREADS;
+                camera.threadsCount = cores <= 2 ? 1 : cores;
+            } else
+                camera.threadsCount = threads;
+            return this;
+        }
+
+        /**
+         * Set debug printing interval. If it's zero - there won't be printing at all
+         * @param  interval printing interval in %
+         * @return          builder object itself
+         */
+        public Builder setDebugPrint(double interval) {
+            if (interval < 0) throw new IllegalArgumentException("interval parameter must be non-negative");
+            camera.printInterval = interval;
             return this;
         }
 
@@ -424,20 +535,6 @@ public class Camera implements Cloneable {
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
-        }
-
-        /**
-         * For now, set rayTracer if the type is simple, otherwise set rayTracer to null
-         * @param scene the scene that will be rendered using this ray tracer
-         * @param rayTracerType the type of the rayTracer
-         * @return A camera
-         */
-        public Builder setRayTracer(Scene scene, RayTracerType rayTracerType) {
-            if (rayTracerType == RayTracerType.SIMPLE)
-                camera.rayTracer = new SimpleRayTracer(scene);
-            else
-                camera.rayTracer = null;
-            return this;
         }
     }
 }

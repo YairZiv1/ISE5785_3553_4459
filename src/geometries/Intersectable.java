@@ -14,6 +14,13 @@ public abstract class Intersectable {
     Intersectable() { /* to satisfy JavaDoc generator */ }
 
     /**
+     * Returns a new intersectable that is a copy of this intersectable moved by the given offset vector.
+     * @param offset the vector by which to move the intersectable
+     * @return the moved intersectable
+     */
+    public abstract Intersectable move(Vector offset);
+
+    /**
      * The Intersection class is to associate intersection points with intersecting geometries.
      */
     public static class Intersection {

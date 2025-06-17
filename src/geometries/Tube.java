@@ -30,6 +30,13 @@ public class Tube extends RadialGeometry {
     }
 
     @Override
+    public Geometry move(Vector offset) {
+        return new Tube(radius, new Ray(ray.getPoint(0).add(offset), ray.getVector()))
+                .setEmission(this.getEmission())
+                .setMaterial(this.getMaterial());
+    }
+
+    @Override
     public Vector getNormal(Point p) {
         // A variable that contains the Point of the Ray.
         final Point rayPoint = ray.getPoint(0);

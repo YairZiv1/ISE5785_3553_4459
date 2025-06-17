@@ -1,6 +1,7 @@
 package geometries;
 
 import primitives.Ray;
+import primitives.Vector;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -36,6 +37,15 @@ public class Geometries extends Intersectable{
      */
     public void add(Intersectable... geometries){
         Collections.addAll(this.geometries, geometries);
+    }
+
+    @Override
+    public Geometries move(Vector offset) {
+        Geometries translated = new Geometries();
+        for (Intersectable geo : geometries) {
+            translated.add(geo.move(offset));
+        }
+        return translated;
     }
 
     @Override

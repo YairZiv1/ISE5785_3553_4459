@@ -3,7 +3,7 @@ package renderer;
 import geometries.Intersectable. Intersection;
 import lighting.LightSource;
 import primitives.*;
-import sceneTest.Scene;
+import scene.Scene;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;

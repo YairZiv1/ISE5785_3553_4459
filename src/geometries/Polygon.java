@@ -88,6 +88,17 @@ public class Polygon extends Geometry {
     }
 
     @Override
+    public Geometry move(Vector offset) {
+        Point[] translated = new Point[size];
+        for (int i = 0; i < size; i++) {
+            translated[i] = vertices.get(i).add(offset);
+        }
+        return new Polygon(translated)
+                .setEmission(this.getEmission())
+                .setMaterial(this.getMaterial());
+    }
+
+    @Override
     public Vector getNormal(Point point) {
         return plane.getNormal(point);
     }

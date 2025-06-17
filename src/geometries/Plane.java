@@ -55,6 +55,13 @@ public class Plane extends Geometry {
     }
 
     @Override
+    public Geometry move(Vector offset) {
+        return new Plane(this.head.add(offset), this.normal)
+                .setEmission(this.getEmission())
+                .setMaterial(this.getMaterial());
+    }
+
+    @Override
     public Vector getNormal(Point p) {
         return normal;
     }

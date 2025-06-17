@@ -1,4 +1,4 @@
-package renderer;
+package special;
 
 import lighting.AmbientLight;
 import lighting.DirectionalLight;
@@ -8,7 +8,9 @@ import java.util.Random;
 
 import geometries.*;
 import primitives.*;
-import sceneTest.Scene;
+import renderer.Camera;
+import renderer.RayTracerType;
+import scene.Scene;
 
 /**
  * Testing FullImageTest
@@ -33,25 +35,37 @@ public class FullImageTest {
     @Test
     void allEffects() {
         // stars
+        Geometries stars = new Geometries();
+
         Random rand = new Random();
-        int numStars = 350;
+        int numStars = 500;
         Color starEmission = new Color( 200 , 200 , 200);
         Material starMaterial = new Material().setKD(0.5).setKT(1).setShininess(200);
 
         for (int i = 0; i < numStars; i++) {
-            double x = rand.nextDouble() * 500 - 250;   // between -250 and 250
-            double y = rand.nextDouble() * 400 + 100;   // between 100 and 500
-            double z = rand.nextDouble() * 320 - 200;   // between -200 and 120
+            double x = rand.nextDouble() * 1800 - 900;   // between -900 and 900
+            double y = rand.nextDouble() * 1000 + 6000;   // between 6000 and 7000
+            double z = rand.nextDouble() * 1500 - 2500;   // between -2500 and -1000
 
-            double radius = rand.nextDouble() * 0.6 + 0.3; // between 0.3 and 0.9
-            radius += Math.pow(rand.nextDouble(), 11) * 1; // just a few that are very big
+            double radius = rand.nextDouble() * 2 + 1; // between 1 and 3
+            radius += Math.pow(rand.nextDouble(), 10) * 3; // just a few that are very big
 
-            sceneTest.geometries.add(
+            stars.add(
                     new Sphere(new Point(x, y, z), radius)
                             .setEmission(starEmission)
                             .setMaterial(starMaterial)
             );
         }
+
+        // moon
+        Point moonCenter = new Point(0,100,-250);
+        double moonRadius = 220;
+        Color moonEmission = new Color(90, 90, 90);
+        Material moonMaterial = new Material().setKD(0.7).setKS(0.1).setKR(0.1).setShininess(10);
+
+        Geometry moon = new Sphere(moonCenter, moonRadius)
+                .setEmission(moonEmission)
+                .setMaterial(moonMaterial);
 
         // alien
         Color alienEmission = new Color(60, 192, 60);
@@ -69,14 +83,19 @@ public class FullImageTest {
                 .setEmission(alienEmission).setMaterial(alienMaterial);
         Geometry alienLeftHand = new Cylinder(1, new Ray(new Point(0,100,54), new Vector(-1,0,1)), 8)
                 .setEmission(alienEmission).setMaterial(alienMaterial);
-        Geometry alienRightFeeler = new Cylinder(1, new Ray(new Point(1,100,65), new Vector(1,0,2.5)), 5)
+        Geometry alienRightFeeler = new Cylinder(1, new Ray(new Point(1,100,65), new Vector(1,0,2.5)), 4)
                 .setEmission(alienEmission).setMaterial(alienMaterial);
-        Geometry alienLeftFeeler = new Cylinder(1, new Ray(new Point(-1,100,65), new Vector(-1,0,2.5)), 5)
+        Geometry alienLeftFeeler = new Cylinder(1, new Ray(new Point(-1,100,65), new Vector(-1,0,2.5)), 4)
                 .setEmission(alienEmission).setMaterial(alienMaterial);
         Geometry alienEye = new Sphere(new Point(0,98,63.5), 2.8)
                 .setEmission(new Color(230, 230, 230)).setMaterial(new Material().setKD(0.5).setKS(0.7).setShininess(150));
         Geometry alienPupil = new Sphere(new Point(0,95,64), 1)
                 .setEmission(new Color(20, 20, 20)).setMaterial(new Material().setKD(0.2).setKS(0.9).setShininess(300));
+
+        Geometries alien = new Geometries(
+                alienHead, alienBody, alienRightLeg, alienLeftLeg, alienRightHand,
+                alienLeftHand, alienRightFeeler, alienLeftFeeler, alienEye, alienPupil
+        );
 
         // ufo dome
         Point ufoDomeCenter = new Point(0,100,50);
@@ -87,6 +106,11 @@ public class FullImageTest {
         Geometry ufoDome = new Sphere(ufoDomeCenter, ufoDomeRadius)
                 .setEmission(ufoDomeEmission)
                 .setMaterial(ufoDomeMaterial);
+
+        // another ufo dome for the other ufos
+        Geometry otherUfosDome = new Sphere(ufoDomeCenter, ufoDomeRadius)
+                .setEmission(new Color(0, 0, 0))
+                .setMaterial(new Material().setKD(0).setKS(3).setShininess(50).setKR(1));
 
         // ufo cylinder
         Ray ufoCylinderRay = new Ray(new Point(0,100,44), Vector.AXIS_Z);
@@ -100,6 +124,7 @@ public class FullImageTest {
                 .setMaterial(ufoCylinderMaterial);
 
         // ufo disk (skirt)
+        Geometries ufoDisk = new Geometries();
         double topRadiusDisk = 18;
         double bottomRadiusDisk = 50;
         double heightTopDisk = 44;
@@ -128,7 +153,7 @@ public class FullImageTest {
         // creating ufo disk (skirt)
         for (int dot = 0; dot < numberOfDots; dot++) {
             int nextDot = (dot + 1) % numberOfDots;
-            sceneTest.geometries.add(
+            ufoDisk.add(
                     new Polygon(
                             bottomCircleDots[dot],
                             bottomCircleDots[nextDot],
@@ -155,10 +180,11 @@ public class FullImageTest {
                 .setMaterial(circleMaterial);
 
         // glow spheres
+        Geometries ufoGlowSpheres = new Geometries();
         int numGlowSpheres = 16;
         double glowSphereRadius = 3;
         double glowSphereCircleRadius = 48;
-        double zGlowSphere = 26;
+        double zGlowSphere = 25.5;
         Color glowSphereEmission = new Color(255, 255, 150);
         Material glowSphereMaterial= new Material().setKD(0.1).setKS(0.5).setShininess(300);
 
@@ -167,12 +193,18 @@ public class FullImageTest {
             double xGlowSphere = glowSphereCircleRadius * Math.cos(angle);
             double yGlowSphere = glowSphereCircleRadius * Math.sin(angle) + 100;
 
-            sceneTest.geometries.add(
+            ufoGlowSpheres.add(
                     new Sphere(new Point(xGlowSphere, yGlowSphere, zGlowSphere), glowSphereRadius)
                             .setEmission(glowSphereEmission)
                             .setMaterial(glowSphereMaterial)
             );
         }
+
+        Geometries ufo = new Geometries(ufoDome,
+                ufoCylinder, ufoDisk, circle1, circle2, circle3, ufoGlowSpheres);
+
+        Geometries otherUfos = new Geometries(otherUfosDome,
+                ufoCylinder, ufoDisk, circle1, circle2, circle3, ufoGlowSpheres);
 
         // ufo laser
         double laserRadius = 10;
@@ -185,31 +217,34 @@ public class FullImageTest {
                 .setEmission(laserEmission)
                 .setMaterial(laserMaterial);
 
-        // moon
-        Point moonCenter = new Point(0,100,-250);
-        double moonRadius = 220;
-        Color moonEmission = new Color(90, 90, 90);
-        Material moonMaterial = new Material().setKD(0.7).setKS(0.1).setKR(0.1).setShininess(10);
-
-        Geometry moon = new Sphere(moonCenter, moonRadius)
-                .setEmission(moonEmission)
-                .setMaterial(moonMaterial);
-
-        // adding ufo and moon
-        sceneTest.geometries.add(ufoDome, ufoCylinder, circle1, circle2, circle3, laser, moon);
-        // adding alien
-        sceneTest.geometries.add(alienHead, alienBody, alienRightLeg, alienLeftLeg, alienRightHand, alienLeftHand,
-                alienRightFeeler, alienLeftFeeler, alienEye, alienPupil
-        );
-
+        // adding stars and moon to the scene
+        sceneTest.geometries.add(stars, moon);
+        // adding the main alien and ufo and its laser to the scene
+        sceneTest.geometries.add(alien, ufo);
+        sceneTest.geometries.add(laser);
         sceneTest.lights.add(new SpotLight(
                 new Color(700, 600, 200), new Point(0,100,28), Vector.AXIS_Z.scale(-1))
                 .setKl(0.0001)
                 .setKq(0.00005)
                 .setNarrowBeam(25)
         );
+
+        // adding other aliens and ufos to the scene
+        sceneTest.geometries.add(otherUfos.move(new Vector(-45, -1700, 410)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(70, -1200, 250)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(-80, -450, 30)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(200, 270, -120)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(130, 340, -110)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(200, 470, -120)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(70, 500, -220)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(70, 1700, -320)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(-250, 1700, -310)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(-50, 2000, -300)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(320, 4000, -700)));
+
         sceneTest.lights.add(new DirectionalLight(new Color(100,100,100), new Vector(-8,-10,-10)));
         sceneTest.lights.add(new DirectionalLight(new Color(70,70,70), new Vector(0,1,-1)));
+
         sceneTest.setAmbientLight(new AmbientLight(new Color(26, 26, 26)));
 
         cameraBuilder
@@ -217,8 +252,10 @@ public class FullImageTest {
                 .setDirection(Point.ZERO, Vector.AXIS_Y) //
                 .setVpDistance(1000).setVpSize(200, 200) //
                 .setResolution(700, 700) //
+                .setAperture(10, 2160, 4) //
+                .setMultithreading(-2) //
                 .build() //
                 .renderImage() //
-                .writeToImage("UFO in space");
+                .writeToImage("UFOs in space");
     }
 }

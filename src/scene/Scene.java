@@ -1,4 +1,4 @@
-package sceneTest;
+package scene;
 
 import geometries.Geometries;
 import lighting.AmbientLight;
