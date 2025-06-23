@@ -37,7 +37,6 @@ class TeapotTest {
      * 10 Teapot tests with CBR
      */
     @Test
-    @Disabled
     void testTeapot2() {
         for (int i = 10; i > 0; --i) {
             teapot2();
@@ -48,7 +47,6 @@ class TeapotTest {
      * 100 Teapot tests with BVH
      */
     @Test
-    @Disabled
     void testTeapot3() {
         for (int i = 100; i > 0; --i) {
             teapot3();
@@ -60,7 +58,7 @@ class TeapotTest {
      */
     void teapot2() {
         prepareTeapot() //
-                //.enableCBR() //
+                .enableCBR() //
                 .build() //
                 .renderImage() //
                 .printGrid(50, new Color(YELLOW)) //
@@ -72,7 +70,7 @@ class TeapotTest {
      */
     void teapot3() {
         prepareTeapot() //
-                //.enableBVH() //
+                .enableBVH() //
                 .build() //
                 .renderImage() //
                 .printGrid(50, new Color(YELLOW)) //

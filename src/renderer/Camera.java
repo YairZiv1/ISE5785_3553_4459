@@ -1,11 +1,11 @@
 package renderer;
 
+import geometries.BoundingBox;
 import primitives.*;
+import primitives.Vector;
 import scene.Scene;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.MissingResourceException;
+import java.util.*;
 import java.util.stream.*;
 
 import static primitives.Util.alignZero;
@@ -79,6 +79,15 @@ public class Camera implements Cloneable {
      * The number of rays to be cast for each side of the aperture for depth of field (DoF) effect
      */
     private int raysPerSideDoF = 1;
+
+    /**
+     * Enable CBR optimization
+     */
+    private boolean enableCBR = false;
+    /**
+     * Enable BVH optimization
+     */
+    private boolean enableBVH = false;
 
     /** Number of threads to use fore rendering image by the camera */
     private int              threadsCount     = 0;
@@ -236,12 +245,14 @@ public class Camera implements Cloneable {
      */
     private void castRay(int i, int j) {
         Color color;
+        Ray centralRay = constructRay(nX, nY, j, i);
+
         if (raysPerSideAA > 1) // If multiple rays are used, cast a beam of rays
-            color = castRayAntiAliasing(i, j);
+            color = castRayAntiAliasing(centralRay);
         else if (apertureSize > 0 && raysPerSideDoF > 1) // If the depth of field is used...
-            color = castRayDepthOfField(constructRay(nX, nY, j, i));
+            color = castRayDepthOfField(centralRay);
         else // If no antialiasing and no depth of field, use a single ray
-            color = rayTracer.traceRay(constructRay(nX, nY, j, i));
+            color = rayTracer.traceRay(centralRay);
 
         imageWriter.writePixel(j, i, color);
         pixelManager.pixelDone();
@@ -249,20 +260,18 @@ public class Camera implements Cloneable {
 
     /**
      * This method creates a beam of rays through a pixel and returns the averaged color.
-     * @param i the pixel's row index
-     * @param j the pixel's column index
+     * @param centralRay the ray that goes through the pixel
      * @return the average color from all rays in the beam
      */
-    private Color castRayAntiAliasing(int i, int j) {
-        Ray centralRay = constructRay(nX, nY, j, i);
+    private Color castRayAntiAliasing(Ray centralRay) {
         Point targetPoint = centralRay.getPoint(distance);
-        double areaSize = width / nX;
 
-        List<Point> samplePoints = new BlackBoard(centralRay, targetPoint, areaSize, raysPerSideAA).getSamplePoints();
+        List<Point> samplePoints = new BlackBoard(centralRay, targetPoint, width / nX, raysPerSideAA)
+                .generateSamplePoints();
 
         Color totalColor = Color.BLACK;
         for (Point samplePoint : samplePoints) {
-            Ray sampleRay = new Ray(p0, samplePoint.subtract(p0));
+            Ray sampleRay = new Ray(this.p0, samplePoint.subtract(this.p0));
             if (apertureSize > 0 && raysPerSideDoF > 1) // If the depth of field is used...
                 totalColor = totalColor.add(castRayDepthOfField(sampleRay));
             else // If no depth of field, use a single ray
@@ -274,17 +283,18 @@ public class Camera implements Cloneable {
 
     /**
      * This method colors a pixel using depth of field (DoF) effect.
-     * @param ray the ray that goes through the pixel
+     * @param centralRay the ray that goes through the pixel
      * @return the average color from all rays in the aperture
      */
-    private Color castRayDepthOfField(Ray ray) {
-        Point focalPoint = ray.getPoint(focalDistance);
+    private Color castRayDepthOfField(Ray centralRay) {
+        Point focalPoint = centralRay.getPoint(focalDistance);
 
-        List<Point> aperturePoints = new BlackBoard(ray, p0, apertureSize, raysPerSideDoF).getSamplePoints();
+        List<Point> aperturePoints = new BlackBoard(centralRay, this.p0, apertureSize, raysPerSideDoF)
+                .generateSamplePoints();
+
         Color totalColor = Color.BLACK;
-
-        for (Point origin : aperturePoints) {
-            Ray originRay = new Ray(origin, focalPoint.subtract(origin));
+        for (Point aperturePoint : aperturePoints) {
+            Ray originRay = new Ray(aperturePoint, focalPoint.subtract(aperturePoint));
             totalColor = totalColor.add(rayTracer.traceRay(originRay));
         }
 
@@ -416,8 +426,9 @@ public class Camera implements Cloneable {
          * @return A camera
          */
         public Builder setAntiAliasingResolution(int raysPerSide) {
+            // We are not doing the adaptive super sampling improvement, so raysPerSide not must be a power of 2 plus 1
             if (raysPerSide < 1)
-                throw new IllegalArgumentException("multiple rays must be positive");
+                throw new IllegalArgumentException("number of rays per side must be positive");
 
             camera.raysPerSideAA = raysPerSide;
             return this;
@@ -435,12 +446,35 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("aperture size must be non-negative");
             if (alignZero(focalDistance) <= 0)
                 throw new IllegalArgumentException("focal distance must be positive");
+            // We are not doing the adaptive super sampling improvement, so raysPerSide not must be a power of 2 plus 1
             if (raysPerSide < 1)
-                throw new IllegalArgumentException("multiple rays for DoF must be positive");
+                throw new IllegalArgumentException("number of rays per side must be positive");
 
             camera.apertureSize = apertureSize;
             camera.focalDistance = focalDistance;
             camera.raysPerSideDoF = raysPerSide;
+            return this;
+        }
+
+        /**
+         * Enable CBR optimization.
+         * CBR is not compatible with BVH, so if BVH is enabled, it will be disabled.
+         * @return A camera
+         */
+        public Builder enableCBR() {
+            camera.enableCBR = true;
+            camera.enableBVH = false; // CBR is not compatible with BVH
+            return this;
+        }
+
+        /**
+         * Enable BVH optimization.
+         * BVH is not compatible with CBR, so if CBR is enabled, it will be disabled.
+         * @return A camera
+         */
+        public Builder enableBVH() {
+            camera.enableBVH = true;
+            camera.enableCBR = false; // BVH is not compatible with CBR
             return this;
         }
 
@@ -529,6 +563,11 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("distance must be positive");
             if (alignZero(camera.width) <= 0 || alignZero(camera.height) <= 0)
                 throw new IllegalArgumentException("width and height must be positive");
+
+            if (camera.enableCBR)
+                camera.rayTracer.scene.geometries.createCBR();
+            else if (camera.enableBVH)
+                camera.rayTracer.scene.geometries .createBVH();
 
             try {
                 return (Camera)camera.clone();

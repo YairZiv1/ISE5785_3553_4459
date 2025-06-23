@@ -6,6 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static java.lang.Double.NEGATIVE_INFINITY;
+import static java.lang.Double.POSITIVE_INFINITY;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
@@ -68,6 +70,8 @@ public class Plane extends Geometry {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
+        // No need to test if the ray intersects the bounding box of the plane, because a plane is infinite in size.
+
         // Point that represents the ray's head
         final Point rayPoint = ray.getPoint(0);
         // Vector that represents the ray's axis
@@ -90,5 +94,14 @@ public class Plane extends Geometry {
         // if (0 ≥ t) or (maxDistance < t) there are no intersections
         return (alignZero(t) > 0 && alignZero(t - maxDistance) <= 0) ?
                 List.of(new Intersection(this, ray.getPoint(t))) : null;
+    }
+
+    @Override
+    protected BoundingBox calculateBoundingBox() {
+        // A plane is infinite in size, so it does not have a limited bounding box.
+        return new BoundingBox(
+                new Point(NEGATIVE_INFINITY, NEGATIVE_INFINITY, NEGATIVE_INFINITY),
+                new Point(POSITIVE_INFINITY, POSITIVE_INFINITY, POSITIVE_INFINITY)
+        );
     }
 }

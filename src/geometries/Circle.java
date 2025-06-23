@@ -46,6 +46,9 @@ public class Circle extends RadialGeometry {
 
     @Override
     public List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
+        // Test if the ray intersects the bounding box of the circle
+        if (boundingBox != null && boundingBox.isNotIntersected(ray)) return null;
+
         // test the intersections with circle’s plane
         // we prefer to use the helper method so that we already check the distance
         final var intersections = plane.calculateIntersections(ray, maxDistance);
@@ -56,5 +59,13 @@ public class Circle extends RadialGeometry {
             return List.of(new Intersection(this, intersections.getFirst().point));
 
         return null;
+    }
+
+    @Override
+    protected BoundingBox calculateBoundingBox() {
+        return new BoundingBox(
+                new Point(center.getX() - radius, center.getY() - radius, center.getZ() - radius),
+                new Point(center.getX() + radius, center.getY() + radius, center.getZ() + radius)
+        );
     }
 }

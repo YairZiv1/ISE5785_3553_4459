@@ -105,6 +105,9 @@ public class Polygon extends Geometry {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
+        // Test if the ray intersects the bounding box of the polygon
+        if (boundingBox != null && boundingBox.isNotIntersected(ray)) return null;
+
         // test the intersections with polygon's plane
         // we prefer to use the helper method so that we already check the distance
         final var intersections = plane.calculateIntersections(ray, maxDistance);
@@ -154,5 +157,23 @@ public class Polygon extends Geometry {
         }
         Intersection intersection = intersections.getFirst();
         return List.of(new Intersection(this, intersection.point));
+    }
+
+    @Override
+    protected BoundingBox calculateBoundingBox() {
+        double minX = Double.POSITIVE_INFINITY, minY = Double.POSITIVE_INFINITY, minZ = Double.POSITIVE_INFINITY;
+        double maxX = Double.NEGATIVE_INFINITY, maxY = Double.NEGATIVE_INFINITY, maxZ = Double.NEGATIVE_INFINITY;
+
+        for (Point vertex : vertices) {
+            minX = Math.min(minX, vertex.getX());
+            minY = Math.min(minY, vertex.getY());
+            minZ = Math.min(minZ, vertex.getZ());
+
+            maxX = Math.max(maxX, vertex.getX());
+            maxY = Math.max(maxY, vertex.getY());
+            maxZ = Math.max(maxZ, vertex.getZ());
+        }
+
+        return new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
     }
 }

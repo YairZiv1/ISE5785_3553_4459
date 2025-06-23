@@ -14,11 +14,9 @@ public abstract class Intersectable {
     Intersectable() { /* to satisfy JavaDoc generator */ }
 
     /**
-     * Returns a new intersectable that is a copy of this intersectable moved by the given offset vector.
-     * @param offset the vector by which to move the intersectable
-     * @return the moved intersectable
+     * The bounding box of the intersectable.
      */
-    public abstract Intersectable move(Vector offset);
+    protected BoundingBox boundingBox = null;
 
     /**
      * The Intersection class is to associate intersection points with intersecting geometries.
@@ -88,6 +86,13 @@ public abstract class Intersectable {
     }
 
     /**
+     * Returns a new intersectable that is a copy of this intersectable moved by the given offset vector.
+     * @param offset the vector by which to move the intersectable
+     * @return the moved intersectable
+     */
+    public abstract Intersectable move(Vector offset);
+
+    /**
      * Function that called from a geometry shape and calculates the intersections with a given ray.
      * This method cannot be overridden
      * @param ray the given ray that we want to calculate the intersections with
@@ -128,4 +133,19 @@ public abstract class Intersectable {
     public final List<Intersection> calculateIntersections(Ray ray) {
         return calculateIntersections(ray, Double.POSITIVE_INFINITY);
     }
+
+    /**
+     * Sets the bounding box of the intersectable.
+     * @return the intersectable itself
+     */
+    public final Intersectable setBoundingBox() {
+        this.boundingBox = calculateBoundingBox();
+        return this;
+    }
+
+    /**
+     * Calculates the bounding box of the intersectable.
+     * @return the bounding box of the intersectable
+     */
+    protected abstract BoundingBox calculateBoundingBox();
 }

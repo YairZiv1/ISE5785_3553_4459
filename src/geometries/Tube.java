@@ -8,6 +8,9 @@ import primitives.Util;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.lang.Double.NEGATIVE_INFINITY;
+import static java.lang.Double.POSITIVE_INFINITY;
+
 /**
  * The Tube class represents a 3D tube of Euclidean geometry in a Cartesian
  * 3-Dimensional coordinate system.
@@ -61,6 +64,8 @@ public class Tube extends RadialGeometry {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
+        // No need to test if the ray intersects the bounding box of the tube, because a tube is infinite in size.
+
         // The head of the intersecting ray.
         Point rayHead = ray.getPoint(0);
         // The head of the ray that represents the tube.
@@ -141,5 +146,14 @@ public class Tube extends RadialGeometry {
         }
 
         return intersections;
+    }
+
+    @Override
+    protected BoundingBox calculateBoundingBox() {
+        // A tube is infinite in size, so it does not have a limited bounding box.
+        return new BoundingBox(
+                new Point(NEGATIVE_INFINITY, NEGATIVE_INFINITY, NEGATIVE_INFINITY),
+                new Point(POSITIVE_INFINITY, POSITIVE_INFINITY, POSITIVE_INFINITY)
+        );
     }
 }

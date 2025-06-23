@@ -35,6 +35,30 @@ public class Point {
     }
 
     /**
+     * Returns the x-coordinate of this point.
+     * @return the x-coordinate of this point.
+     */
+    public double getX() {
+        return coords.d1();
+    }
+
+    /**
+     * Returns the y-coordinate of this point.
+     * @return the y-coordinate of this point.
+     */
+    public double getY() {
+        return coords.d2();
+    }
+
+    /**
+     * Returns the z-coordinate of this point.
+     * @return the z-coordinate of this point.
+     */
+    public double getZ() {
+        return coords.d3();
+    }
+
+    /**
      * Subtract between a point to this point.
      * @param p the point to subtract from this point.
      * @return a vector representing the result of the subtraction.

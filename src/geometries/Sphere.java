@@ -43,6 +43,9 @@ public class Sphere extends RadialGeometry {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
+        // Test if the ray intersects the bounding box of the sphere
+        if (boundingBox != null && boundingBox.isNotIntersected(ray)) return null;
+
         // Point that represents the ray's head
         final Point rayPoint = ray.getPoint(0);
 
@@ -79,5 +82,13 @@ public class Sphere extends RadialGeometry {
         // 0 intersections
         else
             return null;
+    }
+
+    @Override
+    protected BoundingBox calculateBoundingBox() {
+        return new BoundingBox(
+                new Point(center.getX() - radius, center.getY() - radius, center.getZ() - radius),
+                new Point(center.getX() + radius, center.getY() + radius, center.getZ() + radius)
+        );
     }
 }

@@ -79,6 +79,9 @@ public class Cylinder extends Tube {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
+        // Test if the ray intersects the bounding box of the cylinder
+        if (boundingBox != null && boundingBox.isNotIntersected(ray)) return null;
+
         Point baseCenter = this.ray.getPoint(0);
         List<Intersection> intersections = null;
         var list = super.calculateIntersectionsHelper(ray, maxDistance);
@@ -119,5 +122,21 @@ public class Cylinder extends Tube {
             intersections.add(new Intersection(this, list.getFirst().point));
         }
         return intersections;
+    }
+
+    @Override
+    protected BoundingBox calculateBoundingBox() {
+        Point bottomPoint = this.ray.getPoint(0);
+        Point topPoint = this.ray.getPoint(height);
+
+        double minX = Math.min(bottomPoint.getX(), topPoint.getX()) - radius;
+        double minY = Math.min(bottomPoint.getY(), topPoint.getY()) - radius;
+        double minZ = Math.min(bottomPoint.getZ(), topPoint.getZ()) - radius;
+
+        double maxX = Math.max(bottomPoint.getX(), topPoint.getX()) + radius;
+        double maxY = Math.max(bottomPoint.getY(), topPoint.getY()) + radius;
+        double maxZ = Math.max(bottomPoint.getZ(), topPoint.getZ()) + radius;
+
+        return new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
     }
 }

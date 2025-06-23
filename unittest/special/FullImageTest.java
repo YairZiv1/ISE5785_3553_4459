@@ -25,7 +25,7 @@ public class FullImageTest {
 
     /** Scene for the tests */
     Scene sceneTest = new Scene("Test scene");
-    /** Camera builder for the tests with triangles */
+    /** Camera builder for the tests */
     Camera.Builder cameraBuilder = Camera.getBuilder()     //
             .setRayTracer(sceneTest, RayTracerType.SIMPLE);
 
@@ -110,7 +110,7 @@ public class FullImageTest {
         // another ufo dome for the other ufos
         Geometry otherUfosDome = new Sphere(ufoDomeCenter, ufoDomeRadius)
                 .setEmission(new Color(0, 0, 0))
-                .setMaterial(new Material().setKD(0).setKS(3).setShininess(50).setKR(1));
+                .setMaterial(new Material().setKD(0).setKS(3).setShininess(50));
 
         // ufo cylinder
         Ray ufoCylinderRay = new Ray(new Point(0,100,44), Vector.AXIS_Z);
@@ -200,11 +200,13 @@ public class FullImageTest {
             );
         }
 
-        Geometries ufo = new Geometries(ufoDome,
-                ufoCylinder, ufoDisk, circle1, circle2, circle3, ufoGlowSpheres);
+        Geometries ufo = new Geometries(ufoDome, ufoCylinder, circle1, circle2, circle3);
+        ufo.add(ufoDisk.getGeometries());
+        ufo.add(ufoGlowSpheres.getGeometries());
 
-        Geometries otherUfos = new Geometries(otherUfosDome,
-                ufoCylinder, ufoDisk, circle1, circle2, circle3, ufoGlowSpheres);
+        Geometries otherUfos = new Geometries(otherUfosDome, ufoCylinder, circle1, circle2, circle3);
+        otherUfos.add(ufoDisk.getGeometries());
+        otherUfos.add(ufoGlowSpheres.getGeometries());
 
         // ufo laser
         double laserRadius = 10;
@@ -218,9 +220,11 @@ public class FullImageTest {
                 .setMaterial(laserMaterial);
 
         // adding stars and moon to the scene
-        sceneTest.geometries.add(stars, moon);
+        sceneTest.geometries.add(stars.getGeometries());
+        sceneTest.geometries.add(moon);
         // adding the main alien and ufo and its laser to the scene
-        sceneTest.geometries.add(alien, ufo);
+        sceneTest.geometries.add(alien.getGeometries());
+        sceneTest.geometries.add(ufo.getGeometries());
         sceneTest.geometries.add(laser);
         sceneTest.lights.add(new SpotLight(
                 new Color(700, 600, 200), new Point(0,100,28), Vector.AXIS_Z.scale(-1))
@@ -230,17 +234,17 @@ public class FullImageTest {
         );
 
         // adding other aliens and ufos to the scene
-        sceneTest.geometries.add(otherUfos.move(new Vector(-45, -1700, 410)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(70, -1200, 250)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(-80, -450, 30)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(200, 270, -120)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(130, 340, -110)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(200, 470, -120)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(70, 500, -220)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(70, 1700, -320)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(-250, 1700, -310)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(-50, 2000, -300)));
-        sceneTest.geometries.add(otherUfos.move(new Vector(320, 4000, -700)));
+        sceneTest.geometries.add(otherUfos.move(new Vector(-45, -1700, 410)).getGeometries());
+        sceneTest.geometries.add(otherUfos.move(new Vector(70, -1200, 250)).getGeometries());
+        sceneTest.geometries.add(otherUfos.move(new Vector(-80, -450, 30)).getGeometries());
+        // sceneTest.geometries.add(otherUfos.move(new Vector(200, 270, -120)).getGeometries());
+        // sceneTest.geometries.add(otherUfos.move(new Vector(130, 340, -110)).getGeometries());
+        sceneTest.geometries.add(otherUfos.move(new Vector(200, 470, -120)).getGeometries());
+        // sceneTest.geometries.add(otherUfos.move(new Vector(70, 500, -220)).getGeometries());
+        sceneTest.geometries.add(otherUfos.move(new Vector(70, 1700, -320)).getGeometries());
+        sceneTest.geometries.add(otherUfos.move(new Vector(-250, 1700, -310)).getGeometries());
+        sceneTest.geometries.add(otherUfos.move(new Vector(-50, 2000, -300)).getGeometries());
+        sceneTest.geometries.add(otherUfos.move(new Vector(320, 4000, -700)).getGeometries());
 
         sceneTest.lights.add(new DirectionalLight(new Color(100,100,100), new Vector(-8,-10,-10)));
         sceneTest.lights.add(new DirectionalLight(new Color(70,70,70), new Vector(0,1,-1)));
@@ -251,8 +255,9 @@ public class FullImageTest {
                 .setLocation(new Point(0, -2000, 600)) //
                 .setDirection(Point.ZERO, Vector.AXIS_Y) //
                 .setVpDistance(1000).setVpSize(200, 200) //
-                .setResolution(700, 700) //
-                .setAperture(10, 2160, 4) //
+                .setResolution(1000, 1000) //
+                .setAperture(20, 2160, 17) //
+                .enableBVH()
                 .setMultithreading(-2) //
                 .build() //
                 .renderImage() //

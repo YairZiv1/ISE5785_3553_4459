@@ -25,6 +25,9 @@ public class Triangle extends Polygon {
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray, double maxDistance) {
+        // Test if the ray intersects the bounding box of the triangle
+        if (boundingBox != null && boundingBox.isNotIntersected(ray)) return null;
+
         // test the intersections with triangle’s plane
         // we prefer to use the helper method so that we already check the distance
         final var intersections = plane.calculateIntersections(ray, maxDistance);
