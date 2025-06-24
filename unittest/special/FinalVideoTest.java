@@ -1,38 +1,44 @@
 package special;
 
+import geometries.*;
 import lighting.AmbientLight;
 import lighting.DirectionalLight;
 import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
-import java.util.Random;
-
-import geometries.*;
 import primitives.*;
 import renderer.Camera;
 import renderer.RayTracerType;
 import scene.Scene;
 
+import java.io.IOException;
+import java.util.Random;
+
 /**
- * Testing FullImageTest
- * This test creates a scene with various geometries and lights to demonstrate the rendering capabilities of the
- * ray tracer.
+ * This class generates a video of a UFO scene with stars, moon, alien, and UFOs.
+ * It uses the Ray Tracer to render each frame and ffmpeg to compile the frames into a video.
  * @author Yair Ziv and Amitay Yosh'i
  */
-public class FullImageTest {
+public class FinalVideoTest {
     /** Default constructor to satisfy JavaDoc generator */
-    FullImageTest() { /* to satisfy JavaDoc generator */ }
+    FinalVideoTest() { /* to satisfy JavaDoc generator */ }
 
     /** Scene for the tests */
     Scene sceneTest = new Scene("Test scene");
     /** Camera builder for the tests */
     Camera.Builder cameraBuilder = Camera.getBuilder()     //
-            .setRayTracer(sceneTest, RayTracerType.SIMPLE);
+            .setRayTracer(sceneTest, RayTracerType.SIMPLE)
+            .setLocation(new Point(0, -2000, 600)) //
+            .setDirection(Point.ZERO, Vector.AXIS_Y) //
+            .setVpDistance(1000).setVpSize(200, 200) //
+            .setResolution(500, 500) //
+            .enableBVH() //
+            .setMultithreading(-2);
 
     /**
-     * Test method for testing the rendering of a complex scene with various geometries and lighting effects.
+     * Test method for testing the rendering of a complex video with various geometries and lighting effects.
      */
     @Test
-    void allEffects() {
+    void videoMaker() {
         // stars
         Geometries stars = new Geometries();
 
@@ -99,17 +105,13 @@ public class FullImageTest {
         // ufo dome
         Point ufoDomeCenter = new Point(0,100,50);
         double ufoDomeRadius = 20;
-        Color ufoDomeEmission = new Color(30, 30, 70);
-        Material ufoDomeMaterial = new Material().setKD(0.1).setKS(0.7).setShininess(300).setKT(0.8).setKR(0.2);
-
-        Geometry ufoDome = new Sphere(ufoDomeCenter, ufoDomeRadius)
-                .setEmission(ufoDomeEmission)
-                .setMaterial(ufoDomeMaterial);
+        Color otherUfoDomeEmission = new Color(0, 0, 0);
+        Material otherUfoDomeMaterial = new Material().setKD(0).setKS(3).setShininess(50);
 
         // another ufo dome for the other ufos
         Geometry otherUfosDome = new Sphere(ufoDomeCenter, ufoDomeRadius)
-                .setEmission(new Color(0, 0, 0))
-                .setMaterial(new Material().setKD(0).setKS(3).setShininess(50));
+                .setEmission(otherUfoDomeEmission)
+                .setMaterial(otherUfoDomeMaterial);
 
         // ufo cylinder
         Ray ufoCylinderRay = new Ray(new Point(0,100,44), Vector.AXIS_Z);
@@ -199,10 +201,6 @@ public class FullImageTest {
             );
         }
 
-        Geometries ufo = new Geometries(ufoDome, ufoCylinder, circle1, circle2, circle3);
-        ufo.add(ufoDisk.getGeometries());
-        ufo.add(ufoGlowSpheres.getGeometries());
-
         Geometries otherUfos = new Geometries(otherUfosDome, ufoCylinder, circle1, circle2, circle3);
         otherUfos.add(ufoDisk.getGeometries());
         otherUfos.add(ufoGlowSpheres.getGeometries());
@@ -218,49 +216,112 @@ public class FullImageTest {
                 .setEmission(laserEmission)
                 .setMaterial(laserMaterial);
 
-        // adding stars and moon to the scene
-        sceneTest.geometries.add(stars.getGeometries());
-        sceneTest.geometries.add(moon);
-        // adding the main alien and ufo and its laser to the scene
-        sceneTest.geometries.add(alien.getGeometries());
-        sceneTest.geometries.add(ufo.getGeometries());
-        sceneTest.geometries.add(laser);
-        sceneTest.lights.add(new SpotLight(
-                new Color(700, 600, 200), new Point(0,100,28), Vector.AXIS_Z.scale(-1))
-                .setKl(0.0001)
-                .setKq(0.00005)
-                .setNarrowBeam(25)
-        );
-
-        // adding other aliens and ufos to the scene
-        sceneTest.geometries.add(otherUfos.move(new Vector(-45, -1700, 410)).getGeometries());
-        sceneTest.geometries.add(otherUfos.move(new Vector(70, -1200, 250)).getGeometries());
-        sceneTest.geometries.add(otherUfos.move(new Vector(-80, -450, 30)).getGeometries());
-        // sceneTest.geometries.add(otherUfos.move(new Vector(200, 270, -120)).getGeometries());
-        // sceneTest.geometries.add(otherUfos.move(new Vector(130, 340, -110)).getGeometries());
-        sceneTest.geometries.add(otherUfos.move(new Vector(200, 470, -120)).getGeometries());
-        // sceneTest.geometries.add(otherUfos.move(new Vector(70, 500, -220)).getGeometries());
-        sceneTest.geometries.add(otherUfos.move(new Vector(70, 1700, -320)).getGeometries());
-        sceneTest.geometries.add(otherUfos.move(new Vector(-250, 1700, -310)).getGeometries());
-        sceneTest.geometries.add(otherUfos.move(new Vector(-50, 2000, -300)).getGeometries());
-        sceneTest.geometries.add(otherUfos.move(new Vector(320, 4000, -700)).getGeometries());
-
         sceneTest.lights.add(new DirectionalLight(new Color(100,100,100), new Vector(-8,-10,-10)));
         sceneTest.lights.add(new DirectionalLight(new Color(70,70,70), new Vector(0,1,-1)));
 
         sceneTest.setAmbientLight(new AmbientLight(new Color(26, 26, 26)));
+        
+        
+        
+        
+        
+        
+        final int numFrames = 60; // number of frames to render
+        Geometries frameScenes[] = new Geometries[numFrames];
+        Vector moveVector = new Vector(0, -100, 16); // movement vector
 
-        cameraBuilder
-                .setLocation(new Point(0, -2000, 600)) //
-                .setDirection(Point.ZERO, Vector.AXIS_Y) //
-                .setVpDistance(1000).setVpSize(200, 200) //
-                .setResolution(1000, 1000) //
-                .setAntiAliasingResolution(5) //
-                .setAperture(10, 2160, 17) //
-                .enableBVH() //
-                .setMultithreading(-2) //
-                .build() //
-                .renderImage() //
-                .writeToImage("UFOs in space");
+        for (int frameNumber = 0; frameNumber < numFrames; ++frameNumber) {
+            frameScenes[frameNumber] = new Geometries();
+            // adding stars and moon to the scene
+            frameScenes[frameNumber].add(stars.getGeometries());
+            frameScenes[frameNumber].add(moon);
+            // adding the main alien and ufo and its laser to the scene
+            int FB = 10; // frames before the transition starts
+            int NFT = 30; // number of frames for the transition
+            Geometry ufoDome = new Sphere(ufoDomeCenter, ufoDomeRadius);
+            if (frameNumber < FB) {
+                ufoDome = otherUfosDome;
+            }
+            else if (frameNumber < FB + NFT) {
+                double tFactor = (double) (frameNumber - FB) / (double) NFT; // transition factor
+                ufoDome
+                        .setEmission(new Color(30 * tFactor, 30 * tFactor, 70 * tFactor))
+                        .setMaterial(new Material().setKD(0.1 * tFactor).setKS(3 - 2.3 * tFactor).setShininess(50 + (int) (250 * tFactor)).setKT(0.8 * tFactor).setKR(0.2 * tFactor));
+            }
+            else {
+                ufoDome
+                        .setEmission(new Color(30, 30, 70))
+                        .setMaterial(new Material().setKD(0.1).setKS(0.7).setShininess(300).setKT(0.8).setKR(0.2));
+                frameScenes[frameNumber].add(laser);
+                sceneTest.lights.add(new SpotLight(
+                        new Color(700, 600, 200), new Point(0,100,28), Vector.AXIS_Z.scale(-1))
+                        .setKl(0.0001)
+                        .setKq(0.00005)
+                        .setNarrowBeam(25)
+                );
+            }
+            Geometries ufo = new Geometries(ufoDome, ufoCylinder, circle1, circle2, circle3);
+            ufo.add(ufoDisk.getGeometries());
+            ufo.add(ufoGlowSpheres.getGeometries());
+
+            if (frameNumber < FB + NFT) {
+                frameScenes[frameNumber].add(alien.move(moveVector.scale((double) (frameNumber - (FB + NFT)) / 2)).getGeometries());
+                frameScenes[frameNumber].add(ufo.move(moveVector.scale((double) (frameNumber - (FB + NFT)) / 2)).getGeometries());
+            }
+            else {
+                frameScenes[frameNumber].add(alien.getGeometries());
+                frameScenes[frameNumber].add(ufo.getGeometries());
+            }
+
+            // adding other aliens and ufos to the scene
+            frameScenes[frameNumber].add(otherUfos.move(new Vector(-45, -1700, 410))
+                    .move(moveVector.scale(frameNumber - 50.5)).getGeometries());
+            frameScenes[frameNumber].add(otherUfos.move(new Vector(70, -1200, 250))
+                    .move(moveVector.scale(frameNumber - 50.5)).getGeometries());
+            frameScenes[frameNumber].add(otherUfos.move(new Vector(-80, -450, 30))
+                    .move(moveVector.scale(frameNumber - 50.5)).getGeometries());
+            frameScenes[frameNumber].add(otherUfos.move(new Vector(200, 470, -120))
+                    .move(moveVector.scale(frameNumber - 50.5)).getGeometries());
+            frameScenes[frameNumber].add(otherUfos.move(new Vector(70, 1700, -320))
+                    .move(moveVector.scale(frameNumber - 50.5)).getGeometries());
+            frameScenes[frameNumber].add(otherUfos.move(new Vector(-250, 1700, -310))
+                    .move(moveVector.scale(frameNumber - 50.5)).getGeometries());
+            frameScenes[frameNumber].add(otherUfos.move(new Vector(-50, 2000, -300))
+                    .move(moveVector.scale(frameNumber - 50.5)).getGeometries());
+            frameScenes[frameNumber].add(otherUfos.move(new Vector(320, 4000, -700))
+                    .move(moveVector.scale(frameNumber - 50.5)).getGeometries());
+
+            sceneTest.setGeometries(frameScenes[frameNumber]);
+
+            cameraBuilder
+                    .setAperture(6, 2160, 5) //
+                    .build() //
+                    .renderImage() //
+                    .writeToImage("frame" + String.format("%03d", frameNumber));
+        }
+
+        ProcessBuilder pb = new ProcessBuilder(
+                "ffmpeg", "-y",
+                "-loglevel", "error",
+                "-start_number", "1",
+                "-framerate", "15", // 15 FPS
+                "-i", "images/frame%03d.png", // input frames
+                "-c:v", "libx264",
+                "-pix_fmt", "yuv420p",
+                "images/UFOsVideo.mp4" // output video
+        );
+
+        pb.inheritIO();
+        try {
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("video created successfully!");
+            } else {
+                System.err.println("ffmpeg failed with exit code " + exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

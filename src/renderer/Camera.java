@@ -1,6 +1,5 @@
 package renderer;
 
-import geometries.BoundingBox;
 import primitives.*;
 import primitives.Vector;
 import scene.Scene;
@@ -267,7 +266,7 @@ public class Camera implements Cloneable {
         Point targetPoint = centralRay.getPoint(distance);
 
         List<Point> samplePoints = new BlackBoard(centralRay, targetPoint, width / nX, raysPerSideAA)
-                .generateSamplePoints();
+                .generateRandomInCircle();
 
         Color totalColor = Color.BLACK;
         for (Point samplePoint : samplePoints) {
@@ -290,7 +289,7 @@ public class Camera implements Cloneable {
         Point focalPoint = centralRay.getPoint(focalDistance);
 
         List<Point> aperturePoints = new BlackBoard(centralRay, this.p0, apertureSize, raysPerSideDoF)
-                .generateSamplePoints();
+                .generateRandomInCircle();
 
         Color totalColor = Color.BLACK;
         for (Point aperturePoint : aperturePoints) {
