@@ -266,7 +266,7 @@ public class Camera implements Cloneable {
         Point targetPoint = centralRay.getPoint(distance);
 
         List<Point> samplePoints = new BlackBoard(centralRay, targetPoint, width / nX, raysPerSideAA)
-                .generateRandomInCircle();
+                .generateJitteredGrid();
 
         Color totalColor = Color.BLACK;
         for (Point samplePoint : samplePoints) {

@@ -261,6 +261,6 @@ public class FullImageTest {
                 .setMultithreading(-2) //
                 .build() //
                 .renderImage() //
-                .writeToImage("UFOs in space");
+                .writeToImage("UFOs in space Final Image");
     }
 }
