@@ -88,14 +88,12 @@ public class Polygon extends Geometry {
     }
 
     @Override
-    public Geometry move(Vector offset) {
+    protected Geometry moveHelper(Vector offset) {
         Point[] translated = new Point[size];
         for (int i = 0; i < size; i++) {
             translated[i] = vertices.get(i).add(offset);
         }
-        return new Polygon(translated)
-                .setEmission(this.getEmission())
-                .setMaterial(this.getMaterial());
+        return new Polygon(translated);
     }
 
     @Override

@@ -4,9 +4,8 @@ import primitives.*;
 
 /**
  * Class Geometry is the basic interface representing a general geometric shape
- * of Euclidean geometry in Cartesian
- * 3-Dimensional coordinate system
- * This class if PDS - Passive Data Structure.
+ * of Euclidean geometry in a Cartesian
+ * 3-Dimensional coordinate system.
  * @author Yair Ziv and Amitay Yosh'i.
  */
 public abstract class Geometry extends Intersectable {
@@ -65,4 +64,18 @@ public abstract class Geometry extends Intersectable {
         this.material = material;
         return this;
     }
+
+    @Override
+    public Intersectable move(Vector offset) {
+        return this.moveHelper(offset)
+                .setEmission(this.emission)
+                .setMaterial(this.material);
+    }
+
+    /**
+     * Helper method to move the geometry by a given offset.
+     * @param offset the vector by which to move the geometry
+     * @return a new Geometry object moved by the offset without emission and material
+     */
+    protected abstract Geometry moveHelper(Vector offset);
 }

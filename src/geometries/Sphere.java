@@ -30,10 +30,8 @@ public class Sphere extends RadialGeometry {
     }
 
     @Override
-    public Geometry move(Vector offset) {
-        return new Sphere(center.add(offset), radius)
-                .setEmission(this.getEmission())
-                .setMaterial(this.getMaterial());
+    protected Geometry moveHelper(Vector offset) {
+        return new Sphere(center.add(offset), radius);
     }
 
     @Override

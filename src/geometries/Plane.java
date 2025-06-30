@@ -57,10 +57,8 @@ public class Plane extends Geometry {
     }
 
     @Override
-    public Geometry move(Vector offset) {
-        return new Plane(this.head.add(offset), this.normal)
-                .setEmission(this.getEmission())
-                .setMaterial(this.getMaterial());
+    protected Geometry moveHelper(Vector offset) {
+        return new Plane(this.head.add(offset), this.normal);
     }
 
     @Override

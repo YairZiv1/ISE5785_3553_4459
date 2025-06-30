@@ -33,10 +33,8 @@ public class Tube extends RadialGeometry {
     }
 
     @Override
-    public Geometry move(Vector offset) {
-        return new Tube(radius, new Ray(ray.getPoint(0).add(offset), ray.getVector()))
-                .setEmission(this.getEmission())
-                .setMaterial(this.getMaterial());
+    protected Geometry moveHelper(Vector offset) {
+        return new Tube(radius, new Ray(ray.getPoint(0).add(offset), ray.getVector()));
     }
 
     @Override

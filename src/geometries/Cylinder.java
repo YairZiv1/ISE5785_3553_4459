@@ -47,10 +47,8 @@ public class Cylinder extends Tube {
     }
 
     @Override
-    public Geometry move(Vector offset) {
-        return new Cylinder(this.radius, new Ray(this.ray.getPoint(0).add(offset), this.ray.getVector()), height)
-                .setEmission(this.getEmission())
-                .setMaterial(this.getMaterial());
+    protected Geometry moveHelper(Vector offset) {
+        return new Cylinder(this.radius, new Ray(this.ray.getPoint(0).add(offset), this.ray.getVector()), height);
     }
 
     @Override
