@@ -1,10 +1,15 @@
-🛸 The Final Image:
+<p align="center">
+  <img src="https://raw.githubusercontent.com/YairZiv1/ISE5785_3553_4459/master/ufos_gif_v0.gif" alt="UFOsGIF" width="700"/>
+</p>
 
-![UFO Animation](https://github.com/user-attachments/assets/955bd97a-4a12-4463-82a1-2b94c32148d7)
+<p align="center">
+  <a href="https://github.com/YairZiv1/ISE5785_3553_4459/raw/3714e2f134b2c285fe219bdfd36e93db055cfcc5/images/UFOsVideo.mp4">
+    ▶️ Click to watch the original video (MP4)
+  </a>
+</p>
 
-<video width="640" height="360" controls>
-  <source src="https://github.com/YairZiv1/ISE5785_3553_4459/raw/3714e2f134b2c285fe219bdfd36e93db055cfcc5/images/UFOsVideo.mp4" type="video/mp4">
-  הדפדפן שלך לא תומך בניגון וידאו.
-</video>
+---
 
-https://github.com/YairZiv1/ISE5785_3553_4459/raw/3714e2f134b2c285fe219bdfd36e93db055cfcc5/images/UFOsVideo.mp4
+## 🛸 Our Final Image:
+
+![Final Image](https://github.com/user-attachments/assets/955bd97a-4a12-4463-82a1-2b94c32148d7)
