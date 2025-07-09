@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/YairZiv1/ISE5785_3553_4459/master/ufos_gif_v0.gif" alt="UFOsGIF" width="700"/>
+  <img src="https://raw.githubusercontent.com/YairZiv1/ISE5785_3553_4459/3efbcd9/ufos_gif_v0.gif" alt="UFOsGIF" width="700"/>
 </p>
 
 <p align="center">
